@@ -1,18 +1,21 @@
 import { useState } from 'react';
+import { RouterProvider } from 'react-router-dom';
+import router from './router';
 
 function App() {
-  const [message, setMessage] = useState('Happy Coding 🚀');
+  // const [message, setMessage] = useState('Happy Coding 🚀');
 
-  async function fetchFromApi() {
-    const res = await fetch(import.meta.env.VITE_API_URL + '/api/user'); // Feel free to remove this line and the next one
-    const data = await res.json();
-    setMessage(data.message);
-  }
+  // async function fetchFromApi() {
+  //   const res = await fetch(import.meta.env.VITE_API_URL + '/api/user'); // Feel free to remove this line and the next one
+  //   const data = await res.json();
+  //   setMessage(data.message);
+  // }
 
   return (
     <>
-      <h1>{message}</h1>
-      <button onClick={fetchFromApi}>Get Message from API</button>
+      {/* <h1>{message}</h1>
+      <button onClick={fetchFromApi}>Get Message from API</button> */}
+      <RouterProvider router={router} />
     </>
   );
 }
