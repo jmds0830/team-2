@@ -11,10 +11,20 @@
     "lint:fix": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@mantine/core": "^7.5.1",
+    "@mantine/dates": "^7.5.1",
+    "@mantine/form": "^7.5.1",
+    "@mantine/hooks": "^7.5.1",
+    "@mantine/modals": "^7.5.1",
+    "@mantine/notifications": "^7.5.1",
+    "@mantine/nprogress": "^7.5.1",
+    "@tabler/icons-react": "^2.47.0",
+    "dayjs": "^1.11.10",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router": "^6.22.0"
+    "react-router": "^6.22.0",
+    "react-router-dom": "^6.22.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",
@@ -24,6 +34,9 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
+    "postcss": "^8.4.34",
+    "postcss-preset-mantine": "^1.13.0",
+    "postcss-simple-vars": "^7.0.1",
     "vite": "^4.3.2"
   }
 }
