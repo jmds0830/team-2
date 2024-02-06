@@ -86,11 +86,12 @@ function StudentRegistrationPage() {
             placeholder="Input username"
           />
         </div>
-
-        <Checkbox
-          className={styles.checkbox}
-          label="I hereby declare that the above-stated information is true to the best of my knowledge and belief."
-        />
+        <div className={styles.checkboxContainer}>
+          <Checkbox
+            className={styles.checkbox}
+            label="I hereby declare that the above-stated information is true to the best of my knowledge and belief."
+          />
+        </div>
         <div className={styles.buttonContainer}>
           <Button variant="filled">Submit</Button>
         </div>
