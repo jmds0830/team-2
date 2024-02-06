@@ -1,0 +1,67 @@
+.toggleButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+}
+
+.light .icon {
+  display: block;
+}
+
+.dark .icon {
+  display: none;
+}
+
+.dark .icon-dark {
+  display: block;
+}
+
+.light .icon-dark {
+  display: none;
+}
+
+.studentInfoContainer {
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  border: solid 1px gray;
+  padding-block: 20px;
+  padding-inline: 50px;
+}
+
+.title {
+  margin-bottom: 50px;
+}
+
+.nameContainer,
+.courseContainer,
+.usernameContainer {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.firstNameInput,
+.lastNameInput {
+  width: 250px;
+}
+
+.courseInput,
+.emailInput {
+  width: 100%;
+}
+.usernameInput {
+  width: 100%;
+}
+
+.checkbox,
+.buttonContainer {
+  margin: 20px;
+}
