@@ -9,7 +9,7 @@ const router = createBrowserRouter([
     element: <HomePage />,
   },
   {
-    path: '/api/register',
+    path: '/register',
     element: <StudentRegistrationPage />,
   },
   {
