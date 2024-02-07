@@ -6,10 +6,6 @@ import EnSysBanner from '../components/enSysBanner';
 import toast, { Toaster } from 'react-hot-toast';
 
 function StudentRegistrationPage() {
-  const computedColorScheme = useComputedColorScheme('light', {
-    getInitialValueInEffect: true,
-  });
-
   const initialFormData = {
     firstName: '',
     lastName: '',
