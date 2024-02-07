@@ -1,0 +1,48 @@
+.mainContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  max-width: 1200px;
+  height: 500px;
+  border: solid 1px gray;
+  padding-block: 20px;
+  padding-inline: 50px;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.leftContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 700px;
+  height: 450px;
+  border: solid 1px gray;
+  padding-block: 20px;
+  padding-inline: 50px;
+  overflow: scroll;
+}
+
+.leftContainer p {
+  font-size: 15px;
+}
+
+.articleImage {
+  height: 130px;
+  width: auto;
+}
+
+.announcementContainer {
+  border-bottom: solid 1px gray;
+}
+
+.appIntroContainer {
+  border-bottom: solid 1px gray;
+}
+
+.loginButton {
+  position: absolute;
+  top: -10px;
+  left: 580px;
+  z-index: 1000;
+}

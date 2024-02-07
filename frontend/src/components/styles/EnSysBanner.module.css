@@ -1,0 +1,48 @@
+.toggleButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+.light .icon {
+  display: block;
+}
+
+.dark .icon {
+  display: none;
+}
+
+.dark .icon-dark {
+  display: block;
+}
+
+.light .icon-dark {
+  display: none;
+}
+
+.bannerContainer {
+  height: 80px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: rgb(136, 141, 141);
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.nameImage {
+  height: 100px;
+  width: auto;
+}
+
+.bannerContents {
+  display: flex;
+  justify-content: space-between;
+}

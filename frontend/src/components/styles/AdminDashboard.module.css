@@ -1,0 +1,20 @@
+.adminDashboard {
+  width: 400px;
+  height: 450px;
+  border: solid 1px gray;
+  border-radius: 5px;
+  padding-block: 20px;
+  padding-inline: 40px;
+}
+
+.aDButton {
+  margin-top: 20px;
+}
+
+.aCButton {
+  margin-top: -30px;
+}
+
+.aBButton {
+  margin-top: 80px;
+}
