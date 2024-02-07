@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
-import {
-  Input,
-  Checkbox,
-  Button,
-  ActionIcon,
-  useMantineColorScheme,
-  useComputedColorScheme,
-} from '@mantine/core';
-import { IconSun, IconMoon, IconChevronDown } from '@tabler/icons-react';
+import { Input, Checkbox, Button, useComputedColorScheme } from '@mantine/core';
+import { IconChevronDown } from '@tabler/icons-react';
 import styles from '../styles/StudentRegistrationPage.module.css';
+import EnSysBanner from '../components/enSysBanner';
+import toast, { Toaster } from 'react-hot-toast';
 
 function StudentRegistrationPage() {
-  const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('light', {
     getInitialValueInEffect: true,
   });
@@ -48,12 +42,50 @@ function StudentRegistrationPage() {
       const result = await response.json();
 
       if (result.message === 'Error! Username already exists.') {
-        alert('Username already exists. Please input a different one.');
+        await toast.promise(
+          fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              username: formData.username,
+            }),
+          }).then((response) => {
+            if (!response.ok) {
+              throw new Error('Username already exists.');
+            }
+            return response.json();
+          }),
+          {
+            error: 'Username already exists. Please input a different one.',
+          }
+        );
+        // toast.error('Username already exists. Please input a different one.');
         return;
       }
 
       if (result.message === 'Error! Email already exists.') {
-        alert('Email already exists. Please input a different one.');
+        await toast.promise(
+          fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: formData.email,
+            }),
+          }).then((response) => {
+            if (!response.ok) {
+              throw new Error('Email already exists.');
+            }
+            return response.json();
+          }),
+          {
+            error: 'Email already exists. Please input a different one.',
+          }
+        );
+        // toast.error('Email already exists. Please input a different one.');
         return;
       }
 
@@ -87,7 +119,21 @@ function StudentRegistrationPage() {
 
       if (Object.keys(updatedErrors).length === 0) {
         setFormData(initialFormData);
-        alert('Success! Your form was submitted successfully.');
+        try {
+          await fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: formData.email,
+            }),
+          });
+          toast.success('Success! Your form was submitted successfully.');
+        } catch (error) {
+          console.error('Error submitting form:', error);
+          toast.error('An error occurred while submitting the form.');
+        }
       }
     } catch (error) {
       console.error('Error creating profile.', error.message);
@@ -133,28 +179,8 @@ function StudentRegistrationPage() {
 
   return (
     <>
-      <div className={styles.toggleButton}>
-        <ActionIcon
-          onClick={() =>
-            setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')
-          }
-          variant="default"
-          size="xl"
-          aria-label="Toggle color scheme"
-        >
-          <div
-            className={
-              computedColorScheme === 'light' ? styles.light : styles.dark
-            }
-          >
-            <IconSun className={styles.icon} stroke={1.5} />
-            <IconMoon
-              className={`${styles.icon} ${styles['icon-dark']}`}
-              stroke={1.5}
-            />
-          </div>
-        </ActionIcon>
-      </div>
+      <EnSysBanner />
+      <Toaster />
 
       <div className={styles.studentInfoContainer}>
         <h2 className={styles.title}>Student Information Sheet</h2>
@@ -247,7 +273,7 @@ function StudentRegistrationPage() {
           />
         </div>
         <div className={styles.buttonContainer}>
-          <Button variant="filled" onClick={() => handleSubmit()}>
+          <Button variant="filled" color="gray" onClick={() => handleSubmit()}>
             Submit
           </Button>
         </div>
