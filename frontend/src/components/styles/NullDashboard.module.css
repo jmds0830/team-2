@@ -1,0 +1,17 @@
+.studentRegContainer {
+  width: 400px;
+  height: 300px;
+  border: solid 1px gray;
+  border-radius: 5px;
+  padding-block: 20px;
+  padding-inline: 40px;
+}
+
+.adminRegContainer {
+  width: 400px;
+  height: 150px;
+  border: solid 1px gray;
+  border-radius: 5px;
+  padding-block: 20px;
+  padding-inline: 40px;
+}

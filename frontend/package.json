@@ -19,6 +19,7 @@
     "@mantine/notifications": "^7.5.1",
     "@mantine/nprogress": "^7.5.1",
     "@tabler/icons-react": "^2.47.0",
+    "antd": "^5.14.0",
     "dayjs": "^1.11.10",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
