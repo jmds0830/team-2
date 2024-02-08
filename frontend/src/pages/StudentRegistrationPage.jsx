@@ -41,7 +41,7 @@ function StudentRegistrationPage() {
           email: formData.email,
           username: formData.username,
           accept: formData.accept,
-          image: formData.image,
+          photo: formData.photo,
         }),
       });
 
@@ -198,9 +198,9 @@ function StudentRegistrationPage() {
           <FileInput
             accept="image/png,image/jpeg"
             placeholder="Upload Photo"
-            name="image"
+            name="photo"
             type="file"
-            error={errors.image}
+            error={errors.photo}
             // onChange={handleFileChange}
           />
           {/* </form> */}

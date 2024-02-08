@@ -5,16 +5,24 @@ import {
 } from '@mantine/core';
 import { IconSun, IconMoon } from '@tabler/icons-react';
 import styles from './styles/EnSysBanner.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function EnSysBanner() {
+  const [imageSource, setImageSource] = useState('images/ensys-black.png');
+
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('light', {
     getInitialValueInEffect: true,
   });
 
-  const [imageSource, setImageSource] = useState('images/ensys-black.png');
+  useEffect(() => {
+    if (computedColorScheme === 'dark') {
+      setImageSource('images/ensys.png');
+    } else {
+      setImageSource('images/ensys-black.png');
+    }
+  }, [computedColorScheme]);
   const navigate = useNavigate();
 
   const handleReturnToHomePage = () => {
@@ -24,12 +32,11 @@ function EnSysBanner() {
   return (
     <div className={styles.bannerContainer}>
       <div className={styles.bannerContents}>
-        <img 
-          src={imageSource} 
+        <img
+          src={imageSource}
           className={styles.nameImage}
-          onClick={() =>
-            handleReturnToHomePage()
-          } />
+          onClick={() => handleReturnToHomePage()}
+        />
         <div className={styles.toggleButton}>
           <ActionIcon
             onClick={() =>
@@ -44,15 +51,10 @@ function EnSysBanner() {
                 computedColorScheme === 'light' ? styles.light : styles.dark
               }
             >
-              <IconSun
-                className={styles.icon}
-                stroke={1.5}
-                onClick={() => setImageSource('images/ensys.png')}
-              />
+              <IconSun className={styles.icon} stroke={1.5} />
               <IconMoon
                 className={`${styles.icon} ${styles['icon-dark']}`}
                 stroke={1.5}
-                onClick={() => setImageSource('images/ensys-black.png')}
               />
             </div>
           </ActionIcon>

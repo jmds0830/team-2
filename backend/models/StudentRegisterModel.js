@@ -9,7 +9,7 @@ const studentSchema = new Schema({
   username: String,
   studentId: Number,
   password: String,
-  image: {
+  photo: {
     data: Buffer,
     contentType: String,
   },
