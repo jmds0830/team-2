@@ -16,15 +16,56 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json());
 
+async function generateStudentId() {
+  const currentYear = new Date().getFullYear();
+  const studentCount = await Student.countDocuments();
+  const formattedIndex = (studentCount + 1).toString().padStart(4, '0');
+  const studentId = `${currentYear}${formattedIndex}`;
+  return studentId;
+}
+
+function generatePassword() {
+  const length = 10;
+  const charset =
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let password = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+  return password;
+}
+
+async function assignCollege(course) {
+  let college;
+
+  if (course === 'BS Civil Engineering') {
+    college = 'Engineering';
+  } else if (course === 'BS Information Technology') {
+    college = 'Information Technology';
+  } else if (course === 'BS Entrepreneurship') {
+    college = 'Business';
+  }
+  return college;
+}
+
 app.post('/register', validateStudentMiddleware, async (req, res) => {
   try {
     const { firstName, lastName, course, email, username } = req.body;
+    const studentId = generateStudentId();
+    const password = generatePassword();
+
+    const college = await assignCollege(course);
+
     const newStudent = new Student({
       firstName,
       lastName,
       course,
+      college,
       email,
       username,
+      studentId: await studentId,
+      password,
     });
 
     const existingStudent = await Student.findOne({ username });
@@ -53,6 +94,25 @@ app.post('/register', validateStudentMiddleware, async (req, res) => {
   } catch (error) {
     res.status(400).json({
       message: 'Error! Cannot register student.',
+      error: error.message,
+    });
+  }
+});
+
+app.get('/student-info/:id', async (req, res) => {
+  try {
+    const student = await Student.find({ studentId: req.params.id });
+    if (!student) {
+      return res.status(404).json({
+        message: 'Error! Student not found.',
+      });
+    }
+    res.status(200).json({
+      student,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'Error! Cannot fetch student data.',
       error: error.message,
     });
   }

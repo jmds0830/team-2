@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Input, Checkbox, Button, useComputedColorScheme } from '@mantine/core';
+import { useState, useEffect } from 'react';
+import { Input, Checkbox, Button, FileInput } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import styles from '../styles/StudentRegistrationPage.module.css';
 import EnSysBanner from '../components/enSysBanner';
 import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function StudentRegistrationPage() {
   const initialFormData = {
@@ -17,6 +18,14 @@ function StudentRegistrationPage() {
 
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      handleSubmit(id);
+    }
+  }, [id]);
 
   async function handleSubmit() {
     try {
@@ -32,6 +41,7 @@ function StudentRegistrationPage() {
           email: formData.email,
           username: formData.username,
           accept: formData.accept,
+          image: formData.image,
         }),
       });
 
@@ -57,7 +67,6 @@ function StudentRegistrationPage() {
             error: 'Username already exists. Please input a different one.',
           }
         );
-        // toast.error('Username already exists. Please input a different one.');
         return;
       }
 
@@ -81,7 +90,6 @@ function StudentRegistrationPage() {
             error: 'Email already exists. Please input a different one.',
           }
         );
-        // toast.error('Email already exists. Please input a different one.');
         return;
       }
 
@@ -107,25 +115,23 @@ function StudentRegistrationPage() {
         updatedErrors.username = result.errors.username;
       }
 
-      if (!formData.accept) {
+      if (formData.accept === false) {
         updatedErrors.accept = result.errors.accept;
       }
+
+      // if (formData.image === null && result.errors.image) {
+      //   updatedErrors.image = result.errors.image;
+      // }
 
       setErrors(updatedErrors);
 
       if (Object.keys(updatedErrors).length === 0) {
         setFormData(initialFormData);
         try {
-          await fetch('http://localhost:3000/register', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: formData.email,
-            }),
-          });
           toast.success('Success! Your form was submitted successfully.');
+          setTimeout(() => {
+            navigate(`/student-info/${result.newStudent.studentId}`);
+          }, 2000);
         } catch (error) {
           console.error('Error submitting form:', error);
           toast.error('An error occurred while submitting the form.');
@@ -141,6 +147,13 @@ function StudentRegistrationPage() {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
     setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
   };
+
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     setFormData((prevData) => ({ ...prevData, image: file }));
+  //   }
+  // };
 
   const handleBlur = async (e) => {
     const { name, value } = e.target;
@@ -179,7 +192,19 @@ function StudentRegistrationPage() {
       <Toaster />
 
       <div className={styles.studentInfoContainer}>
-        <h2 className={styles.title}>Student Information Sheet</h2>
+        <div className={styles.topInfo}>
+          <h2>Student Information Sheet</h2>
+          {/* <form action="/register" method="post" enctype="multipart/form-data"> */}
+          <FileInput
+            accept="image/png,image/jpeg"
+            placeholder="Upload Photo"
+            name="image"
+            type="file"
+            error={errors.image}
+            // onChange={handleFileChange}
+          />
+          {/* </form> */}
+        </div>
         <div className={styles.nameContainer}>
           <p>First Name:</p>
           <Input.Wrapper
@@ -226,9 +251,11 @@ function StudentRegistrationPage() {
               <option value="" selected disabled>
                 Select a course
               </option>
-              <option value="civil">BS Civil Engineering</option>
-              <option value="information">BS Information Technology</option>
-              <option value="entrep">BS Entrepreneurship</option>
+              <option value="BS Civil Engineering">BS Civil Engineering</option>
+              <option value="BS Information Technology">
+                BS Information Technology
+              </option>
+              <option value="BS Entrepreneurship">BS Entrepreneurship</option>
             </Input>
           </Input.Wrapper>
           <p>Email:</p>
@@ -269,7 +296,7 @@ function StudentRegistrationPage() {
           />
         </div>
         <div className={styles.buttonContainer}>
-          <Button variant="filled" color="gray" onClick={() => handleSubmit()}>
+          <Button variant="filled" color="gray" onClick={handleSubmit}>
             Submit
           </Button>
         </div>
