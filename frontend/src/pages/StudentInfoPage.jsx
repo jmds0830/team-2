@@ -69,7 +69,11 @@ function StudentInfoPage() {
                 <span className={styles.info}>{student.username}</span>
               </Grid.Col>
               <Grid.Col className={styles.grid} span={5.5}>
-                <span>Password: </span> <span className={styles.info}></span>
+                <span>Password: </span>
+                <span className={styles.info}>{student.password}</span>
+                <Button variant="filled" color="gray">
+                  Change Password
+                </Button>
               </Grid.Col>
             </Grid>
             <div className={styles.buttonContainer}>

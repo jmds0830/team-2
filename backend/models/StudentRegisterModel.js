@@ -8,6 +8,7 @@ const studentSchema = new Schema({
   email: String,
   username: String,
   studentId: Number,
+  password: String,
   image: {
     data: Buffer,
     contentType: String,

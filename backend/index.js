@@ -24,6 +24,18 @@ async function generateStudentId() {
   return studentId;
 }
 
+function generatePassword() {
+  const length = 10;
+  const charset =
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let password = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+  return password;
+}
+
 async function assignCollege(course) {
   let college;
 
@@ -34,7 +46,6 @@ async function assignCollege(course) {
   } else if (course === 'BS Entrepreneurship') {
     college = 'Business';
   }
-
   return college;
 }
 
@@ -42,6 +53,7 @@ app.post('/register', validateStudentMiddleware, async (req, res) => {
   try {
     const { firstName, lastName, course, email, username } = req.body;
     const studentId = generateStudentId();
+    const password = generatePassword();
 
     const college = await assignCollege(course);
 
@@ -53,6 +65,7 @@ app.post('/register', validateStudentMiddleware, async (req, res) => {
       email,
       username,
       studentId: await studentId,
+      password,
     });
 
     const existingStudent = await Student.findOne({ username });
