@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Grid, Image, Button } from '@mantine/core';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { Modal, Input, Space } from 'antd';
 import { useParams } from 'react-router-dom';
 import EnSysBanner from '../components/enSysBanner';
 import styles from '../styles/StudentInfo.module.css';
@@ -7,6 +9,20 @@ import styles from '../styles/StudentInfo.module.css';
 function StudentInfoPage() {
   const [studentData, setStudentData] = useState([]);
   const { id } = useParams();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   async function fetchStudentData() {
     try {
@@ -26,6 +42,31 @@ function StudentInfoPage() {
   return (
     <>
       <EnSysBanner />
+      <Modal
+        className={styles.modal}
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <h2 className={styles.modalTitle}>Change Password</h2>
+        <Space direction="vertical">
+          <span>Old Password</span>
+          <Input.Password
+            className={styles.input}
+            placeholder="Input Old Password"
+          />
+          <span>New Password</span>
+          <Input.Password
+            placeholder="Input New Password"
+            className={styles.input}
+          />
+          <span>Confirm New Password</span>
+          <Input.Password
+            placeholder="Confirm New Password"
+            className={styles.input}
+          />
+        </Space>
+      </Modal>
       <div>
         {studentData?.student?.map((student, index) => (
           <div className={styles.studentInfoContainer} key={index}>
@@ -71,7 +112,7 @@ function StudentInfoPage() {
               <Grid.Col className={styles.grid} span={5.5}>
                 <span>Password: </span>
                 <span className={styles.info}>{student.password}</span>
-                <Button variant="filled" color="gray">
+                <Button variant="filled" color="gray" onClick={showModal}>
                   Change Password
                 </Button>
               </Grid.Col>
