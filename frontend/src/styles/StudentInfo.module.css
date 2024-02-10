@@ -1,7 +1,9 @@
 .studentInfoContainer {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   text-align: left;
+  height: 550px;
   width: 1000px;
   border: solid 1px gray;
   margin-top: 100px;
@@ -35,7 +37,6 @@
 .buttonContainer {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
 }
 
 .modalTitle {
@@ -45,4 +46,17 @@
 
 .input {
   margin-bottom: 10px;
+}
+
+.inputFirst,
+.inputLast,
+.inputUsername,
+.inputCourse {
+  width: max-content;
+  padding-block: -10px;
+}
+
+.inputEmail {
+  width: 220px;
+  padding-block: 0;
 }

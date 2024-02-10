@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Input, Checkbox, Button, FileInput } from '@mantine/core';
-import { IconChevronDown } from '@tabler/icons-react';
+import { IconChevronDown, IconExclamationCircle } from '@tabler/icons-react';
 import styles from '../styles/StudentRegistrationPage.module.css';
 import EnSysBanner from '../components/enSysBanner';
 import toast, { Toaster } from 'react-hot-toast';
@@ -127,10 +127,6 @@ function StudentRegistrationPage() {
         updatedErrors.accept = result.errors.accept;
       }
 
-      // if (formData.image === null && result.errors.image) {
-      //   updatedErrors.image = result.errors.image;
-      // }
-
       setErrors(updatedErrors);
 
       if (Object.keys(updatedErrors).length === 0) {
@@ -155,13 +151,6 @@ function StudentRegistrationPage() {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
     setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
   };
-
-  // const handleFileChange = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     setFormData((prevData) => ({ ...prevData, image: file }));
-  //   }
-  // };
 
   const handleBlur = async (e) => {
     const { name, value } = e.target;
@@ -217,6 +206,7 @@ function StudentRegistrationPage() {
             error={errors.photo}
           />
         </div>
+
         <div className={styles.nameContainer}>
           <p>First Name:</p>
           <Input.Wrapper
@@ -230,6 +220,15 @@ function StudentRegistrationPage() {
               value={formData.firstName}
               onChange={handleChange}
               onBlur={handleBlur}
+              rightSectionPointerEvents="none"
+              rightSection={
+                errors.firstName && (
+                  <IconExclamationCircle
+                    style={{ width: 20, height: 20 }}
+                    color="var(--mantine-color-error)"
+                  />
+                )
+              }
             />
           </Input.Wrapper>
           <p>Last Name:</p>
@@ -244,6 +243,15 @@ function StudentRegistrationPage() {
               value={formData.lastName}
               onChange={handleChange}
               onBlur={handleBlur}
+              rightSectionPointerEvents="none"
+              rightSection={
+                errors.lastName && (
+                  <IconExclamationCircle
+                    style={{ width: 20, height: 20 }}
+                    color="var(--mantine-color-error)"
+                  />
+                )
+              }
             />
           </Input.Wrapper>
         </div>
@@ -255,6 +263,7 @@ function StudentRegistrationPage() {
               rightSection={<IconChevronDown size={14} stroke={1.5} />}
               pointer
               mt="md"
+              radius="md"
               name="course"
               value={formData.course}
               onChange={handleChange}
@@ -279,6 +288,15 @@ function StudentRegistrationPage() {
               value={formData.email}
               onChange={handleChange}
               onBlur={handleBlur}
+              rightSectionPointerEvents="none"
+              rightSection={
+                errors.email && (
+                  <IconExclamationCircle
+                    style={{ width: 20, height: 20 }}
+                    color="var(--mantine-color-error)"
+                  />
+                )
+              }
             />
           </Input.Wrapper>
         </div>
@@ -289,13 +307,22 @@ function StudentRegistrationPage() {
             error={errors.username}
           >
             <Input
-              className={styles.usernameInput}
               radius="md"
               placeholder="Input username"
               name="username"
               value={formData.username}
+              maxlength="15"
               onChange={handleChange}
               onBlur={handleBlur}
+              rightSectionPointerEvents="none"
+              rightSection={
+                errors.username && (
+                  <IconExclamationCircle
+                    style={{ width: 20, height: 20 }}
+                    color="var(--mantine-color-error)"
+                  />
+                )
+              }
             />
           </Input.Wrapper>
         </div>

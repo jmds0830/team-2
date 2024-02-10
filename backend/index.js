@@ -129,11 +129,13 @@ app.patch('/student-info/:id', async (req, res) => {
       return;
     }
 
-    const { firstName, lastName, course, email, username, password } = req.body;
+    const { firstName, lastName, course, college, email, username, password } =
+      req.body;
 
     student.firstName = firstName || student.firstName;
     student.lastName = lastName || student.lastName;
     student.course = course || student.course;
+    student.college = college || student.college;
     student.email = email || student.email;
     student.username = username || student.username;
     student.password = password || student.password;
