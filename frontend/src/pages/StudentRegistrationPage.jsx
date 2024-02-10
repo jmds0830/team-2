@@ -29,6 +29,10 @@ function StudentRegistrationPage() {
 
   async function handleSubmit() {
     try {
+      if (errors.email && errors.email === 'Invalid email format') {
+        return;
+      }
+
       const response = await fetch('http://localhost:3000/register', {
         method: 'POST',
         headers: {
@@ -111,6 +115,10 @@ function StudentRegistrationPage() {
         updatedErrors.email = result.errors.email;
       }
 
+      if (errors.email === 'Invalid email format') {
+        updatedErrors.email = errors.email;
+      }
+
       if (formData.username === '' && result.errors.username) {
         updatedErrors.username = result.errors.username;
       }
@@ -183,6 +191,13 @@ function StudentRegistrationPage() {
       } catch (error) {
         console.error(error.message);
       }
+    } else if (name === 'email' && !/\S+@\S+\.\S+/.test(value)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: 'Invalid email format',
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
     }
   };
 
@@ -194,16 +209,13 @@ function StudentRegistrationPage() {
       <div className={styles.studentInfoContainer}>
         <div className={styles.topInfo}>
           <h2>Student Information Sheet</h2>
-          {/* <form action="/register" method="post" enctype="multipart/form-data"> */}
           <FileInput
             accept="image/png,image/jpeg"
             placeholder="Upload Photo"
             name="photo"
             type="file"
             error={errors.photo}
-            // onChange={handleFileChange}
           />
-          {/* </form> */}
         </div>
         <div className={styles.nameContainer}>
           <p>First Name:</p>
@@ -272,7 +284,10 @@ function StudentRegistrationPage() {
         </div>
         <div className={styles.usernameContainer}>
           <p>Username:</p>
-          <Input.Wrapper className={styles.emailInput} error={errors.username}>
+          <Input.Wrapper
+            className={styles.usernameInput}
+            error={errors.username}
+          >
             <Input
               className={styles.usernameInput}
               radius="md"
