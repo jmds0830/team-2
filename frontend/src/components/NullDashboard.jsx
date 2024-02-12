@@ -1,4 +1,6 @@
 import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 import {
   Input,
   Button,
@@ -8,22 +10,115 @@ import { Modal } from 'antd';
 import styles from './styles/NullDashboard.module.css';
 
 function NullDashboard() {
+  const initialFormData = {
+    username: '',
+    password: '',
+  };
   const [open, setOpen] = useState(false);
-  const usernameRef = useRef();
-  const passwordRef = useRef();
+  const [formData, setFormData] = useState(initialFormData);
+  const [errors, setErrors] = useState({});
 
-  const showModal = () => {
+  const openModal = () => {
     setOpen(true);
+    navigate('/login');
   };
 
-  const handleCancel = () => {
+  const closeModal = () => {
     setOpen(false);
-    clearInputFields();
+    navigate('/');
+    setFormData(initialFormData);
+    setErrors({});
   };
+
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+        }),
+      });
+
+      const result = await response.json();
+
+      const updatedErrors = {};
+
+      if (formData.username === '' && result.errors.username) {
+        updatedErrors.username = result.errors.username;
+      }
+
+      if (formData.password === '' && result.errors.password) {
+        updatedErrors.password = result.errors.password;
+      }
+
+      setErrors(updatedErrors);
+
+      if (Object.keys(updatedErrors).length === 0) {
+        setFormData(initialFormData);
+        try {
+          toast.success('Logged in successfully!');
+          navigate('/');
+          setOpen(false);
+        } catch (error) {
+          console.error('Error logging in:', error);
+          toast.error('An error occurred while logging in.');
+        }
+      }
+    } catch (error) {
+      console.error('Error logging in.', error.message);
+    }
+  }
 
   const clearInputFields = () => {
     usernameRef.current.value = '';
     passwordRef.current.value = '';
+  };
+
+  const navigate = useNavigate();
+
+  const handleNavToStudReg = () => {
+    navigate('/register');
+  }
+
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+  };
+
+  const handleBlur = async (e) => {
+    const { name, value } = e.target;
+
+    if (value.trim() === '') {
+      try {
+        const response = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            [name]: value,
+          }),
+        });
+
+        const result = await response.json();
+
+        if (result.errors && result.errors[name]) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: result.errors[name],
+          }));
+        } else {
+          setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+        }
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
   };
 
   return (
@@ -35,12 +130,13 @@ function NullDashboard() {
       direction="column"
       wrap="wrap"
     >
+      <Toaster position='top-center' />
       <div className={styles.loginContainer}>
         <Modal
           open={open}
           title="Log In"
           size="md"
-          onCancel={handleCancel}
+          onCancel={closeModal}
           footer={[]}
           width={300}
         >
@@ -58,22 +154,31 @@ function NullDashboard() {
             }}
           >
             <Input
+              value={formData.username}
+              name='username'
               size="md"
               radius="md"
               placeholder="username"
-              ref={usernameRef}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={errors.username}
             />
             <Input
+              value={formData.password}
+              name='password'
               size="md"
               radius="md"
               type="password"
               placeholder="password"
-              ref={passwordRef}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={errors.password}
             />
             <Button
               size="md"
               variant="filled"
               color="gray"
+              onClick={handleLogin}
             >Log In
             </Button>
           </Flex>
@@ -82,7 +187,7 @@ function NullDashboard() {
           size="lg"
           variant="filled"
           color="gray"
-          onClick={showModal}
+          onClick={openModal}
         >Log In
         </Button>
       </div>
@@ -92,6 +197,7 @@ function NullDashboard() {
           size="lg"
           variant="filled"
           color="gray"
+          onClick={() => handleNavToStudReg()}
         >Create Account</Button>
       </div>
       <div className={styles.adminRegContainer}>

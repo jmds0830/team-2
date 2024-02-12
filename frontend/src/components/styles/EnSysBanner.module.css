@@ -42,6 +42,13 @@
   width: auto;
 }
 
+.nameImageDark {
+  height: 80px;
+  width: auto;
+  margin-left: -15px;
+  margin-top: 10px;
+}
+
 .bannerContents {
   display: flex;
   justify-content: space-between;

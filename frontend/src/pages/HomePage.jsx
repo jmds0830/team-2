@@ -4,7 +4,7 @@ import {
   useComputedColorScheme,
 } from '@mantine/core';
 import styles from '../styles/HomePage.module.css';
-import EnSysBanner from '../components/enSysBanner';
+import EnSysBanner from '../components/EnSysBanner';
 import NullDashboard from '../components/NullDashboard';
 import StudentDashboard from '../components/StudentDashboard';
 import AdminDashboard from '../components/AdminDashboard';
@@ -19,9 +19,9 @@ function HomePage() {
 
   useEffect(() => {
     if (computedColorScheme === 'dark') {
-      setImageSource('images/ensys.png');
+      setImageSource('/images/ensys.png');
     } else {
-      setImageSource('images/ensys-black.png');
+      setImageSource('/images/ensys-black.png');
     }
   }, [computedColorScheme]);
 

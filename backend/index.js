@@ -5,7 +5,10 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import Student from './models/StudentRegisterModel.js';
+import Session from './models/SessionModel.js';
 import validateStudentMiddleware from './middlewares/validateStudentMiddleware.js';
+import validateLoginMiddleware from './middlewares/validateLoginMiddleware.js';
+import { timeStamp } from 'node:console';
 
 const PORT = process.env.PORT || 3000;
 
@@ -20,7 +23,7 @@ async function generateStudentId() {
   const currentYear = new Date().getFullYear();
   const studentCount = await Student.countDocuments();
   const formattedIndex = (studentCount + 1).toString().padStart(4, '0');
-  const studentId = `${currentYear}${formattedIndex}`;
+  const studentId = `${currentYear}`-`${formattedIndex}`;
   return studentId;
 }
 
@@ -113,6 +116,40 @@ app.get('/student-info/:id', async (req, res) => {
   } catch (error) {
     res.status(400).json({
       message: 'Error! Cannot fetch student data.',
+      error: error.message,
+    });
+  }
+});
+
+app.post('/login', validateLoginMiddleware, async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const student = await Student.findOne({ username });
+
+    const newSession = new Session({
+      username,
+      createdAt: new Date(),
+    });
+
+    await newSession.save();
+
+    // const existingSession = await Session.findOne({ username });
+
+    // if (existingSession) {
+    //   await Session.deleteOne({ username });
+    // }
+
+    res.status(200).json({
+      message: 'SUCCESS! User logged in',
+      user: {
+        username,
+      },
+      sessionToken: newSession._id,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'Error! Cannot log in user.',
       error: error.message,
     });
   }

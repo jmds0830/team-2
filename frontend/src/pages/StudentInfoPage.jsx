@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Grid, Image, Button } from '@mantine/core';
 import { useParams } from 'react-router-dom';
-import EnSysBanner from '../components/enSysBanner';
+import EnSysBanner from '../components/EnSysBanner';
 import styles from '../styles/StudentInfo.module.css';
 
 function StudentInfoPage() {
