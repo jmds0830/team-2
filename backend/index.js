@@ -23,7 +23,7 @@ async function generateStudentId() {
   const currentYear = new Date().getFullYear();
   const studentCount = await Student.countDocuments();
   const formattedIndex = (studentCount + 1).toString().padStart(4, '0');
-  const studentId = `${currentYear}` - `${formattedIndex}`;
+  const studentId = `${currentYear}${formattedIndex}`;
   return studentId;
 }
 
