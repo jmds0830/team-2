@@ -157,10 +157,6 @@ app.patch('/student-info/:id', async (req, res) => {
   }
 });
 
-app.listen(app.get('port'), () => {
-  console.log(`App is listening to port ${app.get('port')}`);
-});
-
 app.post('/login', validateLoginMiddleware, async (req, res) => {
   try {
     const { username, password } = req.body;
