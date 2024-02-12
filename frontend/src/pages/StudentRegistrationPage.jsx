@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Input, Checkbox, Button, FileInput } from '@mantine/core';
-import { IconChevronDown } from '@tabler/icons-react';
+import { IconChevronDown, IconExclamationCircle } from '@tabler/icons-react';
 import styles from '../styles/StudentRegistrationPage.module.css';
 import EnSysBanner from '../components/enSysBanner';
 import toast, { Toaster } from 'react-hot-toast';
@@ -29,6 +29,10 @@ function StudentRegistrationPage() {
 
   async function handleSubmit() {
     try {
+      if (errors.email && errors.email === 'Invalid email format') {
+        return;
+      }
+
       const response = await fetch('http://localhost:3000/register', {
         method: 'POST',
         headers: {
@@ -111,6 +115,10 @@ function StudentRegistrationPage() {
         updatedErrors.email = result.errors.email;
       }
 
+      if (errors.email === 'Invalid email format') {
+        updatedErrors.email = errors.email;
+      }
+
       if (formData.username === '' && result.errors.username) {
         updatedErrors.username = result.errors.username;
       }
@@ -118,10 +126,6 @@ function StudentRegistrationPage() {
       if (formData.accept === false) {
         updatedErrors.accept = result.errors.accept;
       }
-
-      // if (formData.image === null && result.errors.image) {
-      //   updatedErrors.image = result.errors.image;
-      // }
 
       setErrors(updatedErrors);
 
@@ -147,13 +151,6 @@ function StudentRegistrationPage() {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
     setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
   };
-
-  // const handleFileChange = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     setFormData((prevData) => ({ ...prevData, image: file }));
-  //   }
-  // };
 
   const handleBlur = async (e) => {
     const { name, value } = e.target;
@@ -183,6 +180,13 @@ function StudentRegistrationPage() {
       } catch (error) {
         console.error(error.message);
       }
+    } else if (name === 'email' && !/\S+@\S+\.\S+/.test(value)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: 'Invalid email format',
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
     }
   };
 
@@ -194,17 +198,15 @@ function StudentRegistrationPage() {
       <div className={styles.studentInfoContainer}>
         <div className={styles.topInfo}>
           <h2>Student Information Sheet</h2>
-          {/* <form action="/register" method="post" enctype="multipart/form-data"> */}
           <FileInput
             accept="image/png,image/jpeg"
             placeholder="Upload Photo"
             name="photo"
             type="file"
             error={errors.photo}
-            // onChange={handleFileChange}
           />
-          {/* </form> */}
         </div>
+
         <div className={styles.nameContainer}>
           <p>First Name:</p>
           <Input.Wrapper
@@ -218,6 +220,15 @@ function StudentRegistrationPage() {
               value={formData.firstName}
               onChange={handleChange}
               onBlur={handleBlur}
+              rightSectionPointerEvents="none"
+              rightSection={
+                errors.firstName && (
+                  <IconExclamationCircle
+                    style={{ width: 20, height: 20 }}
+                    color="var(--mantine-color-error)"
+                  />
+                )
+              }
             />
           </Input.Wrapper>
           <p>Last Name:</p>
@@ -232,6 +243,15 @@ function StudentRegistrationPage() {
               value={formData.lastName}
               onChange={handleChange}
               onBlur={handleBlur}
+              rightSectionPointerEvents="none"
+              rightSection={
+                errors.lastName && (
+                  <IconExclamationCircle
+                    style={{ width: 20, height: 20 }}
+                    color="var(--mantine-color-error)"
+                  />
+                )
+              }
             />
           </Input.Wrapper>
         </div>
@@ -243,6 +263,7 @@ function StudentRegistrationPage() {
               rightSection={<IconChevronDown size={14} stroke={1.5} />}
               pointer
               mt="md"
+              radius="md"
               name="course"
               value={formData.course}
               onChange={handleChange}
@@ -267,20 +288,41 @@ function StudentRegistrationPage() {
               value={formData.email}
               onChange={handleChange}
               onBlur={handleBlur}
+              rightSectionPointerEvents="none"
+              rightSection={
+                errors.email && (
+                  <IconExclamationCircle
+                    style={{ width: 20, height: 20 }}
+                    color="var(--mantine-color-error)"
+                  />
+                )
+              }
             />
           </Input.Wrapper>
         </div>
         <div className={styles.usernameContainer}>
           <p>Username:</p>
-          <Input.Wrapper className={styles.emailInput} error={errors.username}>
+          <Input.Wrapper
+            className={styles.usernameInput}
+            error={errors.username}
+          >
             <Input
-              className={styles.usernameInput}
               radius="md"
               placeholder="Input username"
               name="username"
               value={formData.username}
+              maxlength="15"
               onChange={handleChange}
               onBlur={handleBlur}
+              rightSectionPointerEvents="none"
+              rightSection={
+                errors.username && (
+                  <IconExclamationCircle
+                    style={{ width: 20, height: 20 }}
+                    color="var(--mantine-color-error)"
+                  />
+                )
+              }
             />
           </Input.Wrapper>
         </div>

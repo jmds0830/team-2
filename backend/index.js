@@ -118,6 +118,42 @@ app.get('/student-info/:id', async (req, res) => {
   }
 });
 
+app.patch('/student-info/:id', async (req, res) => {
+  try {
+    const student = await Student.findOne({ studentId: req.params.id });
+
+    if (!student) {
+      res.status(404).json({
+        message: 'ERROR! Student not found. ',
+      });
+      return;
+    }
+
+    const { firstName, lastName, course, college, email, username, password } =
+      req.body;
+
+    student.firstName = firstName || student.firstName;
+    student.lastName = lastName || student.lastName;
+    student.course = course || student.course;
+    student.college = college || student.college;
+    student.email = email || student.email;
+    student.username = username || student.username;
+    student.password = password || student.password;
+
+    await student.save();
+
+    res.status(200).json({
+      message: 'Student Info updated successfully.',
+      data: student,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'Error! Failed to update student information.',
+      error: error.message,
+    });
+  }
+});
+
 app.listen(app.get('port'), () => {
   console.log(`App is listening to port ${app.get('port')}`);
 });

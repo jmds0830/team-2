@@ -18,9 +18,9 @@ function EnSysBanner() {
 
   useEffect(() => {
     if (computedColorScheme === 'dark') {
-      setImageSource('images/ensys.png');
+      setImageSource('/public/images/ensys.png');
     } else {
-      setImageSource('images/ensys-black.png');
+      setImageSource('/public/images/ensys-black.png');
     }
   }, [computedColorScheme]);
   const navigate = useNavigate();
