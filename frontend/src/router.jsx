@@ -3,10 +3,15 @@ import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
 import StudentRegistrationPage from './pages/StudentRegistrationPage';
 import StudentInfoPage from './pages/StudentInfoPage';
+import NullDashboard from './components/NullDashboard';
 
 const router = createBrowserRouter([
   {
     path: '/',
+    element: <HomePage />,
+  },
+  {
+    path: '/login',
     element: <HomePage />,
   },
   {

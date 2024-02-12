@@ -9,7 +9,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function EnSysBanner() {
-  const [imageSource, setImageSource] = useState('images/ensys-black.png');
+  const [imageSource, setImageSource] = useState('/images/ensys-black.png');
+  const navigate = useNavigate();
 
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('light', {
@@ -18,12 +19,11 @@ function EnSysBanner() {
 
   useEffect(() => {
     if (computedColorScheme === 'dark') {
-      setImageSource('/public/images/ensys.png');
+      setImageSource('/images/ensys-animated.gif');
     } else {
-      setImageSource('/public/images/ensys-black.png');
+      setImageSource('/images/ensys-black.png');
     }
   }, [computedColorScheme]);
-  const navigate = useNavigate();
 
   const handleReturnToHomePage = () => {
     navigate('/');
@@ -34,7 +34,7 @@ function EnSysBanner() {
       <div className={styles.bannerContents}>
         <img
           src={imageSource}
-          className={styles.nameImage}
+          className={computedColorScheme === 'dark' ? styles.nameImageDark : styles.nameImage}
           onClick={() => handleReturnToHomePage()}
         />
         <div className={styles.toggleButton}>
