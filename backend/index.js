@@ -134,6 +134,28 @@ app.patch('/student-info/:id', async (req, res) => {
 
     const { firstName, lastName, course, college, email, username, password } =
       req.body;
+    const existingStudentWithUsername = await Student.findOne({ username });
+    const existingStudentwithEmail = await Student.findOne({ email });
+
+    if (
+      existingStudentWithUsername &&
+      existingStudentWithUsername._id.toString() !== student._id.toString()
+    ) {
+      res.status(400).json({
+        message: 'Error! Username already exists.',
+      });
+      return;
+    }
+
+    if (
+      existingStudentwithEmail &&
+      existingStudentwithEmail._id.toString() !== student._id.toString()
+    ) {
+      res.status(400).json({
+        message: 'Error! Email already exists.',
+      });
+      return;
+    }
 
     student.firstName = firstName || student.firstName;
     student.lastName = lastName || student.lastName;

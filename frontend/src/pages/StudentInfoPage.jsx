@@ -1,28 +1,39 @@
 import { useState, useEffect } from 'react';
-import { Grid, Image, Button } from '@mantine/core';
-import { Modal, Space, Input, Select } from 'antd';
-import { useParams } from 'react-router-dom';
+import { Grid, Image, Button, Input, PasswordInput } from '@mantine/core';
+import { IconChevronDown, IconExclamationCircle } from '@tabler/icons-react';
+import { Modal, Space } from 'antd';
+import { useParams, useNavigate } from 'react-router-dom';
 import EnSysBanner from '../components/EnSysBanner';
 import styles from '../styles/StudentInfo.module.css';
+import toast, { Toaster } from 'react-hot-toast';
 
 function StudentInfoPage() {
   const [studentData, setStudentData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editedValues, setEditedValues] = useState({});
+  const [errors, setErrors] = useState({});
 
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const showModal = () => {
     setIsModalOpen(true);
+    navigate(`/student-info/${id}/change-password`);
   };
 
   const handleOk = () => {
     setIsModalOpen(false);
+    navigate(`/student-info/${id}`);
+    setFormData(initialFormData);
+    setErrors({});
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    navigate(`/student-info/${id}`);
+    setFormData(initialFormData);
+    setErrors({});
   };
 
   async function fetchStudentData() {
@@ -43,10 +54,17 @@ function StudentInfoPage() {
   const handleEdit = () => {
     setEditMode(true);
     setEditedValues({ ...studentData });
+    navigate(`/student-info/${id}/edit-information`);
   };
 
   const handleSave = async () => {
     try {
+      const hasErrors = Object.values(errors).some((error) => error !== '');
+      if (hasErrors) {
+        console.error('Cannot save due to validation errors');
+        return;
+      }
+
       const response = await fetch(`http://localhost:3000/student-info/${id}`, {
         method: 'PATCH',
         headers: {
@@ -55,10 +73,25 @@ function StudentInfoPage() {
         body: JSON.stringify(editedValues),
       });
 
-      const updatedData = await response.json();
-      console.log('Student information updated successfully:', updatedData);
-      setEditMode(false);
-      fetchStudentData();
+      const result = await response.json();
+      console.log('Student updated:', result);
+
+      if (result.message === 'Error! Username already exists.') {
+        toast.error('Username already exists. Please input a different one.');
+        return;
+      }
+
+      if (result.message === 'Error! Email already exists.') {
+        toast.error('Email already exists. Please input a different one.');
+        return;
+      }
+
+      if (response.ok) {
+        setEditMode(false);
+        fetchStudentData();
+        navigate(`/student-info/${id}`);
+        toast.success('Student information updated successfully.');
+      }
     } catch (error) {
       console.error('Error fetching student info:', error.message);
     }
@@ -77,6 +110,28 @@ function StudentInfoPage() {
     }
   };
 
+  //
+
+  const handleBlur = async (e) => {
+    const { name, value } = e.target;
+
+    if (name === 'email' && !/\S+@\S+\.\S+/.test(value)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: 'Invalid email format',
+      }));
+      console.log('error: Invalid email format');
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+    }
+
+    if (name === 'email' && !value.trim()) {
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+    }
+  };
+
+  //
+
   const getCollege = (course) => {
     switch (course) {
       case 'BS Civil Engineering':
@@ -93,6 +148,8 @@ function StudentInfoPage() {
   return (
     <>
       <EnSysBanner />
+      <Toaster />
+
       <Modal
         style={{ top: 100 }}
         className={styles.modal}
@@ -104,17 +161,17 @@ function StudentInfoPage() {
         <h2 className={styles.modalTitle}>Change Password</h2>
         <Space direction="vertical">
           <span>Old Password</span>
-          <Input.Password
+          <PasswordInput
             className={styles.input}
             placeholder="Input Old Password"
           />
           <span>New Password</span>
-          <Input.Password
+          <PasswordInput
             placeholder="Input New Password"
             className={styles.input}
           />
           <span>Confirm New Password</span>
-          <Input.Password
+          <PasswordInput
             placeholder="Confirm New Password"
             className={styles.input}
           />
@@ -129,8 +186,8 @@ function StudentInfoPage() {
               <Image
                 radius="md"
                 src={null}
-                h={120}
-                w={120}
+                h={115}
+                w={115}
                 fallbackSrc="https://placehold.co/600x400?text=Student Photo"
               />
             </div>
@@ -140,7 +197,6 @@ function StudentInfoPage() {
                 {editMode ? (
                   <Input
                     className={styles.inputFirst}
-                    size="small"
                     name="firstName"
                     value={editedValues.firstName}
                     placeholder={student.firstName}
@@ -157,7 +213,6 @@ function StudentInfoPage() {
                 {editMode ? (
                   <Input
                     className={styles.inputLast}
-                    size="small"
                     name="lastName"
                     value={editedValues.lastName}
                     placeholder={student.lastName}
@@ -172,33 +227,39 @@ function StudentInfoPage() {
               <Grid.Col className={styles.grid} span={5.5}>
                 <span> Course: </span>
                 {editMode ? (
-                  <Select
-                    size="small"
+                  <Input
+                    className={styles.inputCourse}
+                    component="select"
+                    rightSection={<IconChevronDown size={14} stroke={1.5} />}
+                    pointer
                     name="course"
                     defaultValue={student.course}
                     value={editedValues.course}
-                    onChange={(value) => {
+                    onChange={(e) => {
+                      const { value } = e.target;
                       handleChange('course', value);
                       handleChange('college', getCollege(value));
                     }}
-                    style={{
-                      width: 200,
-                    }}
-                    options={[
-                      {
-                        value: 'BS Civil Engineering',
-                        label: 'BS Civil Engineering',
-                      },
-                      {
-                        value: 'BS Information Technology',
-                        label: 'BS Information Technology',
-                      },
-                      {
-                        value: 'BS Entrepreneurship',
-                        label: 'BS Entrepreneurship',
-                      },
-                    ]}
-                  />
+                  >
+                    <option
+                      value="BS Civil Engineering"
+                      label="BS Civil Engineering"
+                    >
+                      BS Civil Engineering
+                    </option>
+                    <option
+                      value="BS Information Technology"
+                      label="BS Information Technology"
+                    >
+                      BS Information Technology
+                    </option>
+                    <option
+                      value="BS Entrepreneurship"
+                      label="BS Entrepreneurship"
+                    >
+                      BS Entrepreneurship
+                    </option>
+                  </Input>
                 ) : (
                   <span className={styles.info}>{student.course}</span>
                 )}
@@ -213,29 +274,42 @@ function StudentInfoPage() {
               </Grid.Col>
               <Grid.Col className={styles.grid} span={5.5}>
                 <span>Email: </span>
-                {editMode ? (
-                  <Input
-                    className={styles.inputEmail}
-                    radius="md"
-                    size="xs"
-                    name="email"
-                    value={editedValues.email}
-                    placeholder={student.email}
-                    onChange={(e) =>
-                      handleChange(e.target.name, e.target.value)
-                    }
-                  />
-                ) : (
-                  <span className={styles.info}>{student.email}</span>
-                )}
+                <Input.Wrapper
+                  className={styles.inputWrapper}
+                  error={errors.email}
+                >
+                  {editMode ? (
+                    <Input
+                      className={styles.inputEmail}
+                      name="email"
+                      value={editedValues.email}
+                      placeholder={student.email}
+                      onChange={(e) =>
+                        handleChange(e.target.name, e.target.value)
+                      }
+                      onBlur={handleBlur}
+                      rightSectionPointerEvents="none"
+                      rightSection={
+                        errors.email && (
+                          <IconExclamationCircle
+                            style={{ width: 20, height: 20 }}
+                            color="var(--mantine-color-error)"
+                          />
+                        )
+                      }
+                    />
+                  ) : (
+                    <span className={styles.info}>{student.email}</span>
+                  )}
+                </Input.Wrapper>
               </Grid.Col>
               <Grid.Col className={styles.grid} span={5.5}>
                 <span>Username: </span>
                 {editMode ? (
                   <Input
                     className={styles.inputUsername}
-                    size="small"
                     name="username"
+                    maxlength="15"
                     value={editedValues.username}
                     placeholder={student.username}
                     onChange={(e) =>

@@ -3,7 +3,6 @@ import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
 import StudentRegistrationPage from './pages/StudentRegistrationPage';
 import StudentInfoPage from './pages/StudentInfoPage';
-import NullDashboard from './components/NullDashboard';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +19,14 @@ const router = createBrowserRouter([
   },
   {
     path: '/student-info/:id',
+    element: <StudentInfoPage />,
+  },
+  {
+    path: '/student-info/:id/edit-information',
+    element: <StudentInfoPage />,
+  },
+  {
+    path: '/student-info/:id/change-password',
     element: <StudentInfoPage />,
   },
   {
