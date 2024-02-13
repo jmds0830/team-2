@@ -123,6 +123,10 @@ function StudentRegistrationPage() {
         updatedErrors.username = result.errors.username;
       }
 
+      if (formData.username.length < 4) {
+        updatedErrors.username = result.errors.username;
+      }
+
       if (formData.accept === false) {
         updatedErrors.accept = result.errors.accept;
       }
@@ -185,6 +189,12 @@ function StudentRegistrationPage() {
         ...prevErrors,
         [name]: 'Invalid email format',
       }));
+    } else if (name === 'username' && value.length < 4) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: 'Minimum of 4 characters',
+      }));
+      console.log('error: Invalid username format');
     } else {
       setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
     }

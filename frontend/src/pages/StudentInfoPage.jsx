@@ -110,24 +110,32 @@ function StudentInfoPage() {
     }
   };
 
-  //
-
-  const handleBlur = async (e) => {
+  const handleBlur = (e) => {
     const { name, value } = e.target;
+    let error = '';
 
-    if (name === 'email' && !/\S+@\S+\.\S+/.test(value)) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: 'Invalid email format',
-      }));
-      console.log('error: Invalid email format');
-    } else {
-      setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+    if (name === 'email') {
+      if (!/\S+@\S+\.\S+/.test(value)) {
+        error = 'Invalid email format';
+        console.log('error: Invalid email format');
+      }
     }
 
-    if (name === 'email' && !value.trim()) {
-      setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+    if (name === 'username') {
+      if (value.length < 4) {
+        error = 'Minimum of 4 characters';
+        console.log('error: Invalid username format');
+      }
     }
+
+    if (
+      (name === 'email' && !value.trim()) ||
+      (name === 'username' && !value.trim())
+    ) {
+      error = '';
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
   };
 
   //
@@ -197,6 +205,7 @@ function StudentInfoPage() {
                 {editMode ? (
                   <Input
                     className={styles.inputFirst}
+                    size="xs"
                     name="firstName"
                     value={editedValues.firstName}
                     placeholder={student.firstName}
@@ -213,6 +222,7 @@ function StudentInfoPage() {
                 {editMode ? (
                   <Input
                     className={styles.inputLast}
+                    size="xs"
                     name="lastName"
                     value={editedValues.lastName}
                     placeholder={student.lastName}
@@ -229,6 +239,7 @@ function StudentInfoPage() {
                 {editMode ? (
                   <Input
                     className={styles.inputCourse}
+                    size="xs"
                     component="select"
                     rightSection={<IconChevronDown size={14} stroke={1.5} />}
                     pointer
@@ -281,6 +292,7 @@ function StudentInfoPage() {
                   {editMode ? (
                     <Input
                       className={styles.inputEmail}
+                      size="xs"
                       name="email"
                       value={editedValues.email}
                       placeholder={student.email}
@@ -305,20 +317,36 @@ function StudentInfoPage() {
               </Grid.Col>
               <Grid.Col className={styles.grid} span={5.5}>
                 <span>Username: </span>
-                {editMode ? (
-                  <Input
-                    className={styles.inputUsername}
-                    name="username"
-                    maxlength="15"
-                    value={editedValues.username}
-                    placeholder={student.username}
-                    onChange={(e) =>
-                      handleChange(e.target.name, e.target.value)
-                    }
-                  />
-                ) : (
-                  <span className={styles.info}>{student.username}</span>
-                )}
+                <Input.Wrapper
+                  className={styles.inputWrapper}
+                  error={errors.username}
+                >
+                  {editMode ? (
+                    <Input
+                      className={styles.inputUsername}
+                      size="xs"
+                      name="username"
+                      maxlength="15"
+                      value={editedValues.username}
+                      placeholder={student.username}
+                      onChange={(e) =>
+                        handleChange(e.target.name, e.target.value)
+                      }
+                      onBlur={handleBlur}
+                      rightSectionPointerEvents="none"
+                      rightSection={
+                        errors.username && (
+                          <IconExclamationCircle
+                            style={{ width: 20, height: 20 }}
+                            color="var(--mantine-color-error)"
+                          />
+                        )
+                      }
+                    />
+                  ) : (
+                    <span className={styles.info}>{student.username}</span>
+                  )}
+                </Input.Wrapper>
               </Grid.Col>
               <Grid.Col className={styles.grid} span={5.5}>
                 <span>Password: </span>

@@ -35,6 +35,7 @@
 .inputWrapper {
   display: flex;
   flex-direction: column;
+  text-align: center;
 }
 
 .inputWrapper > span {
@@ -67,5 +68,5 @@
 }
 
 .inputEmail {
-  width: 250px;
+  width: 200px;
 }
