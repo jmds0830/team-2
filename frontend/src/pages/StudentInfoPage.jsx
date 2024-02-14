@@ -22,18 +22,46 @@ function StudentInfoPage() {
     navigate(`/student-info/${id}/change-password`);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-    navigate(`/student-info/${id}`);
-    setFormData(initialFormData);
-    setErrors({});
+  const handleOk = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/student-info/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password: editedValues.newPassword }),
+      });
+
+      const result = await response.json();
+      console.log('Password updated', result);
+
+      if (response.ok) {
+        setIsModalOpen(false);
+        navigate(`/student-info/${id}`);
+        setErrors({});
+        setEditedValues((prevValues) => ({
+          ...prevValues,
+          oldPassword: '',
+          newPassword: '',
+          confirmNewPassword: '',
+        }));
+        toast.success('Password updated successfully.');
+      }
+    } catch (error) {
+      console.error('Error saving new password', error.message);
+    }
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
     navigate(`/student-info/${id}`);
-    setFormData(initialFormData);
     setErrors({});
+    setEditedValues((prevValues) => ({
+      ...prevValues,
+      oldPassword: '',
+      newPassword: '',
+      confirmNewPassword: '',
+    }));
   };
 
   async function fetchStudentData() {
@@ -43,7 +71,7 @@ function StudentInfoPage() {
       const data = await response.json();
       setStudentData(data.student);
     } catch (error) {
-      console.error('Error fetching student info:', error.message);
+      console.error('Error fetching student info', error.message);
     }
   }
 
@@ -93,7 +121,7 @@ function StudentInfoPage() {
         toast.success('Student information updated successfully.');
       }
     } catch (error) {
-      console.error('Error fetching student info:', error.message);
+      console.error('Error fetching student info', error.message);
     }
   };
 
@@ -138,7 +166,55 @@ function StudentInfoPage() {
     setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
   };
 
-  //
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setEditedValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  const handlePasswordBlur = (e) => {
+    const { name, value } = e.target;
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    let error = '';
+
+    if (name === 'oldPassword' && value !== studentData[0].password) {
+      error = 'Must match old password';
+      console.log('Must match old password');
+      console.log(studentData[0].password);
+    }
+
+    if (name === 'newPassword') {
+      setEditedValues((prevData) => ({
+        ...prevData,
+        newPassword: value,
+      }));
+    }
+
+    if (name === 'newPassword' && !regex.test(value)) {
+      error =
+        'Must be at least eight characters, at least one uppercase, one lowercase, one number and one special character';
+    }
+
+    if (name === 'confirmNewPassword') {
+      if (editedValues.newPassword !== value) {
+        error = 'New passwords must match';
+        console.log('New passwords must match');
+      }
+    }
+
+    if (
+      (name === 'oldPassword' && !value.trim()) ||
+      (name === 'newPassword' && !value.trim()) ||
+      (name === 'confirmNewPassword' && !value.trim())
+    ) {
+      error = '';
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+  };
 
   const getCollege = (course) => {
     switch (course) {
@@ -172,16 +248,31 @@ function StudentInfoPage() {
           <PasswordInput
             className={styles.input}
             placeholder="Input Old Password"
+            name="oldPassword"
+            onBlur={handlePasswordBlur}
+            onChange={handlePasswordChange}
+            error={errors.oldPassword}
+            value={editedValues.oldPassword}
           />
           <span>New Password</span>
           <PasswordInput
-            placeholder="Input New Password"
             className={styles.input}
+            placeholder="Input New Password"
+            name="newPassword"
+            onBlur={handlePasswordBlur}
+            onChange={handlePasswordChange}
+            error={errors.newPassword}
+            value={editedValues.newPassword}
           />
           <span>Confirm New Password</span>
           <PasswordInput
-            placeholder="Confirm New Password"
             className={styles.input}
+            placeholder="Confirm New Password"
+            name="confirmNewPassword"
+            onBlur={handlePasswordBlur}
+            onChange={handlePasswordChange}
+            error={errors.confirmNewPassword}
+            value={editedValues.confirmNewPassword}
           />
         </Space>
       </Modal>
