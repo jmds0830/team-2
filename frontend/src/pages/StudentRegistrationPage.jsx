@@ -123,6 +123,10 @@ function StudentRegistrationPage() {
         updatedErrors.username = result.errors.username;
       }
 
+      if (formData.username.length < 4) {
+        updatedErrors.username = result.errors.username;
+      }
+
       if (formData.accept === false) {
         updatedErrors.accept = result.errors.accept;
       }
@@ -185,6 +189,12 @@ function StudentRegistrationPage() {
         ...prevErrors,
         [name]: 'Invalid email format',
       }));
+    } else if (name === 'username' && value.length < 4) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: 'Minimum of 4 characters',
+      }));
+      console.log('error: Invalid username format');
     } else {
       setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
     }
@@ -214,7 +224,6 @@ function StudentRegistrationPage() {
             error={errors.firstName}
           >
             <Input
-              radius="md"
               placeholder="Input first name"
               name="firstName"
               value={formData.firstName}
@@ -237,7 +246,6 @@ function StudentRegistrationPage() {
             error={errors.lastName}
           >
             <Input
-              radius="md"
               placeholder="Input last name"
               name="lastName"
               value={formData.lastName}
@@ -263,7 +271,6 @@ function StudentRegistrationPage() {
               rightSection={<IconChevronDown size={14} stroke={1.5} />}
               pointer
               mt="md"
-              radius="md"
               name="course"
               value={formData.course}
               onChange={handleChange}
@@ -282,7 +289,6 @@ function StudentRegistrationPage() {
           <p>Email:</p>
           <Input.Wrapper className={styles.emailInput} error={errors.email}>
             <Input
-              radius="md"
               placeholder="Input email"
               name="email"
               value={formData.email}
@@ -307,11 +313,10 @@ function StudentRegistrationPage() {
             error={errors.username}
           >
             <Input
-              radius="md"
               placeholder="Input username"
               name="username"
-              value={formData.username}
               maxlength="15"
+              value={formData.username}
               onChange={handleChange}
               onBlur={handleBlur}
               rightSectionPointerEvents="none"

@@ -22,11 +22,23 @@
 }
 
 .grid {
+  display: flex;
+  align-items: baseline;
   margin-bottom: 30px;
   padding-left: 20px;
 }
 
 .grid > span {
+  padding-right: 10px;
+}
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.inputWrapper > span {
   padding-right: 10px;
 }
 
@@ -46,17 +58,19 @@
 
 .input {
   margin-bottom: 10px;
+  width: 250px;
 }
 
 .inputFirst,
 .inputLast,
-.inputUsername,
-.inputCourse {
+.inputUsername {
   width: max-content;
-  padding-block: -10px;
 }
 
 .inputEmail {
-  width: 220px;
-  padding-block: 0;
+  width: 200px;
+}
+
+.savePassword {
+  margin-top: 15px;
 }
