@@ -7,6 +7,10 @@
   padding-inline: 40px;
 }
 
+.input {
+  width: 200px;
+}
+
 .studentRegContainer {
   width: 400px;
   height: 160px;

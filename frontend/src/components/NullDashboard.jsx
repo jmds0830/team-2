@@ -2,9 +2,10 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import {
-  Input,
   Button,
   Flex,
+  TextInput,
+  PasswordInput,
 } from '@mantine/core';
 import { Modal } from 'antd';
 import styles from './styles/NullDashboard.module.css';
@@ -17,6 +18,12 @@ function NullDashboard() {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
+
+  const navigate = useNavigate();
+
+  const handleNavToStudReg = () => {
+    navigate('/register');
+  }
 
   const openModal = () => {
     setOpen(true);
@@ -45,54 +52,27 @@ function NullDashboard() {
 
       const result = await response.json();
 
-      const updatedErrors = {};
-
-      if (formData.username === '' && result.errors.username) {
-        updatedErrors.username = result.errors.username;
-      }
-
-      if (formData.password === '' && result.errors.password) {
-        updatedErrors.password = result.errors.password;
-      }
-
-      setErrors(updatedErrors);
-
-      if (Object.keys(updatedErrors).length === 0) {
+      if (response.ok) {
+        toast.success('Logged in successfully!');
+        setOpen(false);
         setFormData(initialFormData);
-        try {
-          toast.success('Logged in successfully!');
-          navigate('/');
-          setOpen(false);
-        } catch (error) {
-          console.error('Error logging in:', error);
-          toast.error('An error occurred while logging in.');
-        }
+        setErrors({});
+        navigate('/');
+      } else {
+        toast.error(result.message || 'An error occurred while logging in.');
       }
     } catch (error) {
-      console.error('Error logging in.', error.message);
+      console.error('Error logging in:', error);
+      toast.error('An error occurred while logging in.');
     }
-  }
-
-  const clearInputFields = () => {
-    usernameRef.current.value = '';
-    passwordRef.current.value = '';
   };
 
-  const navigate = useNavigate();
-
-  const handleNavToStudReg = () => {
-    navigate('/register');
-  }
-
-  const handleChange = async (e) => {
-    const { name, value } = e.target;
+  const handleChange = (name, value) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+    setErrors({});
   };
 
-  const handleBlur = async (e) => {
-    const { name, value } = e.target;
-
+  const handleBlur = async (name, value) => {
     if (value.trim() === '') {
       try {
         const response = await fetch('http://localhost:3000/login', {
@@ -120,6 +100,8 @@ function NullDashboard() {
       }
     }
   };
+
+  const isLoginDisabled = formData.username === '' || formData.password === '';
 
   return (
     <Flex
@@ -153,31 +135,31 @@ function NullDashboard() {
               borderRadius: '5px',
             }}
           >
-            <Input
+            <TextInput
+              className={styles.input}
               value={formData.username}
-              name='username'
-              size="md"
-              radius="md"
+              name="username"
               placeholder="username"
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={(event) => handleChange(event.target.name, event.target.value)}
+              onBlur={() => handleBlur('username', formData.username)}
               error={errors.username}
-            />
-            <Input
-              value={formData.password}
-              name='password'
               size="md"
-              radius="md"
-              type="password"
+            />
+            <PasswordInput
+              className={styles.input}
+              value={formData.password}
+              name="password"
               placeholder="password"
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={(event) => handleChange(event.target.name, event.target.value)}
+              onBlur={() => handleBlur('password', formData.password)}
               error={errors.password}
+              size="md"
             />
             <Button
               size="md"
               variant="filled"
               color="gray"
+              disabled={isLoginDisabled}
               onClick={handleLogin}
             >Log In
             </Button>

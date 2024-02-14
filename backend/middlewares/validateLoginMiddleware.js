@@ -13,7 +13,24 @@ function validateLoginMiddleware(req, res, next) {
     return;
   }
 
-  next();
+  Student.findOne({ username })
+    .then((student) => {
+      if (!student) {
+        res.status(400).json({ message: 'Invalid username or password.' });
+        return;
+      }
+
+      if (password !== student.password) {
+        res.status(400).json({ message: 'Invalid username or password.' });
+        return;
+      }
+
+      req.student = student;
+      next();
+    })
+    .catch((err) => {
+      res.status(500).json({ message: 'Internal server error.' });
+    });
 }
 
 export default validateLoginMiddleware;
