@@ -8,6 +8,7 @@ import Student from './models/StudentRegisterModel.js';
 import Session from './models/SessionModel.js';
 import validateStudentMiddleware from './middlewares/validateStudentMiddleware.js';
 import validateLoginMiddleware from './middlewares/validateLoginMiddleware.js';
+import authenticateUser from './middlewares/authenticateUserMiddleware.js';
 import { timeStamp } from 'node:console';
 
 const PORT = process.env.PORT || 3000;
@@ -23,7 +24,7 @@ async function generateStudentId() {
   const currentYear = new Date().getFullYear();
   const studentCount = await Student.countDocuments();
   const formattedIndex = (studentCount + 1).toString().padStart(4, '0');
-  const studentId = `${currentYear}` - `${formattedIndex}`;
+  const studentId = `${currentYear}${formattedIndex}`;
   return studentId;
 }
 
@@ -157,31 +158,16 @@ app.patch('/student-info/:id', async (req, res) => {
   }
 });
 
-app.post('/login', validateLoginMiddleware, async (req, res) => {
+app.post('/login', validateLoginMiddleware, authenticateUser, async (req, res) => {
   try {
-    const { username, password } = req.body;
-
-    const student = await Student.findOne({ username });
-
-    const newSession = new Session({
-      username,
-      createdAt: new Date(),
-    });
-
-    await newSession.save();
-
-    // const existingSession = await Session.findOne({ username });
-
-    // if (existingSession) {
-    //   await Session.deleteOne({ username });
-    // }
+    const { student, session } = req;
 
     res.status(200).json({
       message: 'SUCCESS! User logged in',
       user: {
-        username,
+        username: student.username,
       },
-      sessionToken: newSession._id,
+      sessionToken: session._id,
     });
   } catch (error) {
     res.status(400).json({
