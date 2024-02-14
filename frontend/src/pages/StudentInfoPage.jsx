@@ -17,6 +17,11 @@ function StudentInfoPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const isDisabled =
+    editedValues.oldPassword === '' ||
+    editedValues.newPassword === '' ||
+    editedValues.confirmNewPassword === '';
+
   const showModal = () => {
     setIsModalOpen(true);
     navigate(`/student-info/${id}/change-password`);
@@ -238,9 +243,9 @@ function StudentInfoPage() {
         style={{ top: 100 }}
         className={styles.modal}
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
         width={450}
+        footer={[]}
       >
         <h2 className={styles.modalTitle}>Change Password</h2>
         <Space direction="vertical">
@@ -274,6 +279,14 @@ function StudentInfoPage() {
             error={errors.confirmNewPassword}
             value={editedValues.confirmNewPassword}
           />
+          <Button
+            className={styles.savePassword}
+            color="gray"
+            onClick={handleOk}
+            disabled={isDisabled}
+          >
+            Save
+          </Button>
         </Space>
       </Modal>
 
