@@ -1,5 +1,37 @@
-.container {
+.grid {
+  display: flex;
+  gap: 30px;
+}
+
+.title {
+  margin-bottom: 40px;
+}
+
+.studentInfoContainer {
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 10px;
+}
+
+.studentInfoTitle {
+  padding-right: 10px;
+}
+
+.scheduleContainer {
   overflow-x: hidden;
-  max-height: 550px;
-  width: 1000px;
+  max-height: 400px;
+  width: 850px;
+  border: solid 1px;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.unitContainer {
+  border: solid 1px;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.button {
+  margin-top: 30px;
 }
