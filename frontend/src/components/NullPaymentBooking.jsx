@@ -9,7 +9,7 @@ function NullPaymentBooking() {
   const navigate = useNavigate();
 
   const handleNavToSubjReg = () => {
-    navigate('/subject-registration'); // Placeholder route only. Leads to subject registration page
+    navigate('/subject-registration/:id'); // Placeholder route only. Leads to subject registration page
   }
 
   return (

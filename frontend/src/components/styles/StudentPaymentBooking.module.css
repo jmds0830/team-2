@@ -2,37 +2,40 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  max-width: 1200px;
+  width: 800px;
   height: 500px;
   border: solid 1px gray;
-  padding-block: 20px;
+  padding-block: 10px;
   padding-inline: 50px;
-  gap: 20px;
   margin-top: 40px;
+}
+
+.leftContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  width: 400px;
+  margin-top: 50px;
+  margin-bottom: 15px;
+  font-size: 15px;
+  gap: 10px;
+}
+
+.info {
+  font-weight: bold;
 }
 
 .rightContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 700px;
-  height: 450px;
-}
-
-.rightContainer p {
+  width: 400px;
+  margin-top: 100px;
+  margin-bottom: 15px;
   font-size: 15px;
+  gap: 25px;
 }
 
-.grid {
-  display: flex;
-  align-items: baseline;
-  margin-bottom: 5px;
-}
-
-.grid > span {
-  padding-right: 10px;
-}
-
-.info {
-  font-weight: bold;
+.dateTimePicker {
+  width: 250px;
 }
