@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Grid } from '@mantine/core';
+import { Button } from '@mantine/core';
+import { DateTimePicker } from '@mantine/dates';
+import toast from 'react-hot-toast';
 import styles from './styles/StudentPaymentBooking.module.css';
 
 function StudentPaymentBooking() {
   const [studentData, setStudentData] = useState([]);
+  const [selectedDateTime, setSelectedDateTime] = useState(null);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -23,43 +26,78 @@ function StudentPaymentBooking() {
     fetchStudentData();
   }, [id]);
 
+  const handleBookPaymentSched = async () => {
+    try {
+      if (!selectedDateTime) {
+        toast.error('Please select a date and time for the payment schedule.');
+        return;
+      }
+
+      const response = await fetch(`http://localhost:3000/payment-booking/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          studentId: id,
+          datetime: selectedDateTime.toISOString(),
+        }),
+      });
+
+      if (response.ok) {
+        toast.success('Payment schedule booked successfully')
+        navigate('/payment-booking/booking-info/:queueId');
+      } else {
+        toast.error('Failed to create payment schedule. Please try again later.');
+      }
+    } catch (error) {
+      console.error('Error creating payment schedule:', error);
+    }
+  };
+
   return (
-    <div>
+    <div className={styles.mainContainer}>
       {studentData.map((student, index) => (
-        <div className={styles.mainContainer}>
-          <div className={styles.rightContainer}>
-            <Grid className={styles.grid} cols={2}>
-              <Grid.Col className={styles.grid} span={5.5}>
-                <span>Name: </span>
-                <span className={styles.info}>{student.firstName} {student.lastName}</span>
-              </Grid.Col>
-              <Grid.Col className={styles.grid} span={5.5}>
-                <span>Student Number: </span>
-                <span className={styles.info}>{student.studentId}</span>
-              </Grid.Col>
-              <Grid.Col className={styles.grid} span={5.5}>
-                <span>College: </span>
-                <span className={styles.info}>{student.college}</span>
-              </Grid.Col>
-              <Grid.Col className={styles.grid} span={5.5}>
-                <span>Course: </span>
-                <span className={styles.info}>{student.course}</span>
-              </Grid.Col>
-              <Grid.Col className={styles.grid} span={5.5}>
-                <span>Payment Info: </span>
-                  <Grid.Col className={styles.grid} span={5.5}>
-                    <span>Total Number of Units: </span>
-                    <span> / 30</span>
-                  </Grid.Col>
-                  <Grid.Col className={styles.grid} span={5.5}>
-                    <span>Total Tuition Amount: </span>
-                    <span>Php </span>
-                  </Grid.Col>
-              </Grid.Col>
-            </Grid>
-          </div>
+        <div className={styles.leftContainer} key={index}>
+          <p>
+            <span className={styles.label}>Name: </span>
+            <span className={styles.info}>{student.firstName} {student.lastName}</span>
+          </p>
+          <p>
+            <span className={styles.label}>Student Number: </span>
+            <span className={styles.info}>{student.studentId}</span>
+          </p>
+          <p>
+            <span className={styles.label}>College: </span>
+            <span className={styles.info}>{student.college}</span>
+          </p>
+          <p>
+            <span className={styles.label}>Course: </span>
+            <span className={styles.info}>{student.course}</span>
+          </p>
+          <p>
+            <span className={styles.label}>Payment Info: </span>
+          </p>
+          <p className={styles.indent}>Total Number of Units: __ / 30</p>
+          <p className={styles.indent}>Total Tuition Amount: Php ________</p>
         </div>
       ))}
+      <div className={styles.rightContainer}>
+        Please select preferred date for payment:
+        <DateTimePicker
+          className={styles.dateTimePicker}
+          clearable
+          defaultValue={null}
+          placeholder="Pick date and time"
+        />
+        <Button
+          size="md"
+          variant="filled"
+          color="gray"
+          onClick={handleBookPaymentSched}
+        >Book Payment Schedule
+        </Button>
+      </div>
     </div>
   );
 }
