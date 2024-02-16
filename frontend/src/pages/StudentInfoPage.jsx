@@ -25,10 +25,17 @@ function StudentInfoPage() {
   const showModal = () => {
     setIsModalOpen(true);
     navigate(`/student-info/${id}/change-password`);
+    isDisabled;
   };
 
   const handleOk = async () => {
     try {
+      const hasErrors = Object.values(errors).some((error) => error !== '');
+      if (hasErrors) {
+        console.error('Cannot save due to validation errors');
+        return;
+      }
+
       const response = await fetch(`http://localhost:3000/student-info/${id}`, {
         method: 'PATCH',
         headers: {
