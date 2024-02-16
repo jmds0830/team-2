@@ -1,0 +1,16 @@
+.container {
+  margin: 100px 30px 30px 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.pageMessage {
+  font-size: 25px;
+}
+
+.uhOhImg {
+  height: 100px;
+  width: 100px;
+  margin: -10px;
+}

@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
 import StudentRegistrationPage from './pages/StudentRegistrationPage';
 import StudentInfoPage from './pages/StudentInfoPage';
+import PaymentBookingPage from './pages/PaymentBookingPage';
 import StudentShedulePage from './pages/StudentSchedulePage';
 
 const router = createBrowserRouter([
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: '/student-info/:id/change-password',
     element: <StudentInfoPage />,
+  },
+  {
+    path: '/payment-booking/:id',
+    element: <PaymentBookingPage />,
   },
   {
     path: '/my-schedule/:id',

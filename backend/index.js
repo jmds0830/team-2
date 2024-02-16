@@ -199,6 +199,25 @@ app.post('/login', validateLoginMiddleware, authenticateUser, async (req, res) =
   }
 });
 
+app.get('/payment-booking/:id', async (req, res) => {
+  try {
+    const student = await Student.find({ studentId: req.params.id });
+    if (!student) {
+      return res.status(404).json({
+        message: 'Error! Student not found.',
+      });
+    }
+    res.status(200).json({
+      student,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'Error! Cannot fetch student data.',
+      error: error.message,
+    });
+  }
+});
+
 app.listen(app.get('port'), () => {
   console.log(`App is listening to port ${app.get('port')}`);
 });
