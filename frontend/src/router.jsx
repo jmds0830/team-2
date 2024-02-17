@@ -17,6 +17,10 @@ const router = createBrowserRouter([
     element: <HomePage />,
   },
   {
+    path: '/:username',
+    element: <HomePage />,
+  },
+  {
     path: '/register',
     element: <StudentRegistrationPage />,
   },
@@ -33,11 +37,11 @@ const router = createBrowserRouter([
     element: <StudentInfoPage />,
   },
   {
-    path: '/payment-booking/:id',
+    path: '/payment-booking/:username',
     element: <PaymentBookingPage />,
   },
   {
-    path: '/payment-booking/:id/payment-schedule',
+    path: '/payment-booking/:username/payment-schedule',
     element: <PaymentSchedulePage />,
   },
   {

@@ -205,13 +205,17 @@ app.patch('/student-info/:id', async (req, res) => {
 app.post('/login', validateLoginMiddleware, authenticateUser, async (req, res) => {
   try {
     const { student } = req;
+    
+    const token = generateToken(student._id);
+    
+    student.token = token;
+    await student.save();
 
     res.status(200).json({
       message: 'SUCCESS! User logged in',
       user: {
         username: student.username,
       },
-      token: generateToken(student._id),
     });
   } catch (error) {
     res.status(400).json({
@@ -221,9 +225,35 @@ app.post('/login', validateLoginMiddleware, authenticateUser, async (req, res) =
   }
 });
 
-app.get('/payment-booking/:id', async (req, res) => {
+app.get('/:username', async (req, res) => {
   try {
-    const student = await Student.find({ studentId: req.params.id });
+    const student = await Student.findOne({ username: req.params.username });
+    const payment = await PaymentBooking.findOne({ username: req.params.username });
+
+    if (student) {
+      if (payment) {
+        res.status(200).json({ 
+          message: 'Payment Schedule booked for student',
+          token: student.token
+        });
+      } else {
+        res.status(200).json({ 
+          message: 'Student found',
+          token: student.token
+        });
+      }
+    } else {
+      res.status(404).json({ message: 'Student not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'An error occurred while fetching data' });
+  }
+});
+
+app.get('/payment-booking/:username', async (req, res) => {
+  try {
+    const student = await Student.find({ username: req.params.username });
     if (!student) {
       return res.status(404).json({
         message: 'Error! Student not found.',
@@ -240,9 +270,9 @@ app.get('/payment-booking/:id', async (req, res) => {
   }
 });
 
-app.post('/payment-booking/:id/book-schedule', async (req, res) => {
+app.post('/payment-booking/:username/book-schedule', async (req, res) => {
   try {
-    const student = await Student.findOne({ studentId: req.params.id });
+    const student = await Student.findOne({ username: req.params.username });
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
@@ -252,6 +282,7 @@ app.post('/payment-booking/:id/book-schedule', async (req, res) => {
 
     const newPaymentBooking = new PaymentBooking({
       queueId: await queueId,
+      username: req.params.username,
       studentId: student.studentId,
       date,
       time,
@@ -289,9 +320,9 @@ app.post('/payment-booking/:id/book-schedule', async (req, res) => {
   }
 });
 
-app.get('/payment-booking/:id/payment-schedule', async (req, res) => {
+app.get('/payment-booking/:username/payment-schedule', async (req, res) => {
   try {
-    const paymentBooking = await PaymentBooking.find({ studentId: req.params.id });
+    const paymentBooking = await PaymentBooking.find({ username: req.params.username });
     if (!paymentBooking) {
       return res.status(404).json({
         message: 'Error! Payment schedule not found.',

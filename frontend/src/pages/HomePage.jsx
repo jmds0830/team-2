@@ -7,10 +7,14 @@ import styles from '../styles/HomePage.module.css';
 import EnSysBanner from '../components/EnSysBanner';
 import StudentDashboard from '../components/StudentDashboard';
 import NullDashboard from '../components/NullDashboard';
+import { useParams } from 'react-router-dom';
 
 
 function HomePage() {
   const [imageSource, setImageSource] = useState('images/ensys-black.png');
+  const [loggedIn, setIsLoggedIn] = useState(false);
+
+  const { username } = useParams();
 
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('light', {
@@ -25,15 +29,38 @@ function HomePage() {
     }
   }, [computedColorScheme]);
 
-  const [loggIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      setIsLoggedIn(true);
-      
-    }
-  }, []);
+    const fetchTokenFromDatabase = async () => {
+      try {
+        if (!username) {
+          return;
+        }
+  
+        const response = await fetch(`http://localhost:3000/${username}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        const result = await response.json();
+  
+        if (response.ok) {
+          if (result.token) {
+            setIsLoggedIn(true);
+          } else {
+            console.error('Token not found:', result.message);
+          }
+        } else {
+          console.error('Failed to fetch token:', result.message);
+        }
+      } catch (error) {
+        console.error('Error fetching token:', error);
+      }
+    };
+  
+    fetchTokenFromDatabase();
+  }, [username]);
 
   return (
     <div>
@@ -56,7 +83,7 @@ function HomePage() {
             <p>Trouble using EnSys? Click the link to read the EnSys manual.</p>
           </div>
         </div>
-        {loggIn ? <StudentDashboard/>: <NullDashboard />}
+        {loggedIn ? <StudentDashboard/>: <NullDashboard />}
       </div>
     </div>
   );

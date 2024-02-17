@@ -5,6 +5,10 @@ const paymentBookingSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  username: {
+    type: String,
+    required: true,
+  },
   studentId: {
     type: Number,
     required: true,

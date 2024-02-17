@@ -9,13 +9,13 @@ function StudentPaymentBooking() {
   const [studentData, setStudentData] = useState([]);
   const [selectedDateTime, setSelectedDateTime] = useState(null);
 
-  const { id } = useParams();
+  const { username } = useParams();
   const navigate = useNavigate();
 
   async function fetchStudentData() {
     try {
-      if (!id) return;
-      const response = await fetch(`http://localhost:3000/payment-booking/${id}`);
+      if (!username) return;
+      const response = await fetch(`http://localhost:3000/payment-booking/${username}`);
       const data = await response.json();
       setStudentData(data.student);
     } catch (error) {
@@ -24,7 +24,7 @@ function StudentPaymentBooking() {
 
   useEffect(() => {
     fetchStudentData();
-  }, [id]);
+  }, [username]);
 
   const handleBookPaymentSched = async () => {
     try {
@@ -36,7 +36,7 @@ function StudentPaymentBooking() {
       const date = selectedDateTime.toISOString().split('T')[0];
       const time = selectedDateTime.toLocaleTimeString('en-US', { hour12: true });
 
-      const response = await fetch(`http://localhost:3000/payment-booking/${id}/book-schedule`, {
+      const response = await fetch(`http://localhost:3000/payment-booking/${username}/book-schedule`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ function StudentPaymentBooking() {
         const responseData = await response.json();
         toast.success(responseData.message);
         setTimeout(() => {
-          navigate(`/payment-booking/${id}/payment-schedule`);
+          navigate(`/payment-booking/${username}/payment-schedule`);
         }, 2000);
       } else {
         const responseData = await response.json();

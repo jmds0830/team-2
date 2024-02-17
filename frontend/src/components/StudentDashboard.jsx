@@ -3,26 +3,82 @@ import {
   Flex,
 } from '@mantine/core';
 import styles from './styles/StudentDashboard.module.css';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 function StudentDashboard() {
+  const [studentData, setStudentData] = useState([]);
+
+  const { username } = useParams();
   const navigate = useNavigate();
 
-  const handleNavToPaymentBooking = () => {
-    navigate('/payment-booking/:id');
-  }
+  useEffect(() => {
+    async function fetchStudentData() {
+      try {
+        if (!username) return;
+        const response = await fetch(`http://localhost:3000/${username}`);
+        const data = await response.json();
+        setStudentData(data.student);
+      } catch (error) {
+        console.error('Error fetching student info', error.message);
+      }
+    }
+
+    fetchStudentData();
+  }, [username]);
+
+  const handleNavToPaymentBooking = async () => {
+    try {
+      if (!username) return;
+  
+      const response = await fetch(`http://localhost:3000/${username}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        if (data.message === 'Payment Schedule booked for student') {
+          navigate(`/payment-booking/${username}/payment-schedule`);
+        } else {
+          navigate(`/payment-booking/${username}`);
+        }
+      }
+    } catch (error) {
+      console.error('Error navigating to payment booking:', error);
+    }
+  };
 
   const handleNavToSchedule = () => {
     navigate('/my-schedule/:id');
   }
 
-  const handleClick = () => {
-    localStorage.removeItem("token");
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
-    
-}
+  const handleClick = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/logout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+
+      if (response.ok) {
+        localStorage.removeItem("token");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        const data = await response.json();
+        console.error('Error logging out:', data.error || 'An error occurred while logging out.');
+        toast.error(data.error || 'An error occurred while logging out.');
+      }
+    } catch (error) {
+      console.error('Error logging out:', error);
+      toast.error('An error occurred while logging out.');
+    }
+  };
 
   return (
     <div className={styles.studentDashboard}>
