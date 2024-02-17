@@ -218,6 +218,7 @@ app.post('/admin/add-subject', async (req, res) => {
   try {
     const { subjectName, subjectCode, units, date, time, instructor } =
       req.body;
+    const slots = 30;
 
     if (
       !subjectName ||
@@ -225,7 +226,8 @@ app.post('/admin/add-subject', async (req, res) => {
       !units ||
       !date ||
       !time ||
-      !instructor
+      !instructor ||
+      !slots
     ) {
       res.status(400).json({
         message: 'Error! Input all necessary fields.',
@@ -240,6 +242,7 @@ app.post('/admin/add-subject', async (req, res) => {
       date,
       time,
       instructor,
+      slots,
     });
 
     const existingSubjectCode = await Subject.findOne({ subjectCode });
@@ -275,7 +278,7 @@ app.patch('/admin/update-subject/:subjId', async (req, res) => {
       });
     }
 
-    const { subjectName, subjectCode, units, date, time, instructor } =
+    const { subjectName, subjectCode, units, date, time, instructor, slots } =
       req.body;
 
     subject.subjectName = subjectName || subject.subjectName;
@@ -284,6 +287,7 @@ app.patch('/admin/update-subject/:subjId', async (req, res) => {
     subject.date = date || subject.date;
     subject.time = time || subject.time;
     subject.instructor = instructor || subject.instructor;
+    subject.slots = slots || subject.slots;
 
     await subject.save();
     res.status(200).json({

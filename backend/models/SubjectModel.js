@@ -7,6 +7,7 @@ const subjectSchema = new Schema({
   date: String,
   time: String,
   instructor: String,
+  slots: Number,
 });
 
 const Subject = model('Subject', subjectSchema);
