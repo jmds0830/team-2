@@ -33,22 +33,29 @@ function StudentPaymentBooking() {
         return;
       }
 
-      const response = await fetch(`http://localhost:3000/payment-booking/${id}`, {
+      const date = selectedDateTime.toISOString().split('T')[0];
+      const time = selectedDateTime.toLocaleTimeString('en-US', { hour12: true });
+
+      const response = await fetch(`http://localhost:3000/payment-booking/${id}/book-schedule`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          studentId: id,
-          datetime: selectedDateTime.toISOString(),
+          date,
+          time,
         }),
       });
 
       if (response.ok) {
-        toast.success('Payment schedule booked successfully')
-        navigate('/payment-booking/booking-info/:queueId');
+        const responseData = await response.json();
+        toast.success(responseData.message);
+        setTimeout(() => {
+          navigate(`/payment-booking/${id}/payment-schedule`);
+        }, 2000);
       } else {
-        toast.error('Failed to create payment schedule. Please try again later.');
+        const responseData = await response.json();
+        toast.error(responseData.message);
       }
     } catch (error) {
       console.error('Error creating payment schedule:', error);
@@ -89,6 +96,7 @@ function StudentPaymentBooking() {
           clearable
           defaultValue={null}
           placeholder="Pick date and time"
+          onChange={setSelectedDateTime}
         />
         <Button
           size="md"

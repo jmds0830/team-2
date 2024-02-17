@@ -4,6 +4,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import StudentRegistrationPage from './pages/StudentRegistrationPage';
 import StudentInfoPage from './pages/StudentInfoPage';
 import PaymentBookingPage from './pages/PaymentBookingPage';
+import PaymentSchedulePage from './pages/PaymentSchedulePage';
 import StudentShedulePage from './pages/StudentSchedulePage';
 
 const router = createBrowserRouter([
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: '/payment-booking/:id',
     element: <PaymentBookingPage />,
+  },
+  {
+    path: '/payment-booking/:id/payment-schedule',
+    element: <PaymentSchedulePage />,
   },
   {
     path: '/my-schedule/:id',

@@ -1,0 +1,29 @@
+.mainContainer {
+  align-items: center;
+  width: 800px;
+  height: 500px;
+  border: solid 1px gray;
+  padding-block: 10px;
+  padding-inline: 100px;
+  margin-top: 40px;
+}
+
+.subContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 600px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  font-size: 15px;
+  gap: 10px;
+}
+
+.info {
+  font-weight: bold;
+}
+
+.queueNum {
+  font-size: 50px;
+  letter-spacing: 5px;
+}
