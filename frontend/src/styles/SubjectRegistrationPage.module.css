@@ -1,0 +1,53 @@
+.mainContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 1200px;
+  height: 550px;
+  border: solid 1px gray;
+  margin-top: 70px;
+}
+
+.subContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  max-width: 690px;
+  max-height: 540px;
+  margin-right: 10px;
+}
+
+.scheduleContainer {
+  width: 690px;
+  height: 280px;
+  border: solid 1px gray;
+  margin-top: 10px;
+  overflow-y: scroll;
+}
+
+.paymentInfoContainer {
+  width: 690px;
+  height: 280px;
+  border: solid 1px gray;
+  margin-top: 10px;
+  overflow-y: scroll;
+}
+
+.subjectContainer {
+  width: 510px;
+  height: 530px;
+  border: solid 1px gray;
+  margin: 10px;
+  padding: 10px;
+}
+
+.subjectLister {
+  overflow-y: scroll;
+  display: flex;
+  align-items: baseline;
+}
+
+.subjectCard {
+  width: 470px;
+  margin: 10px;
+}
