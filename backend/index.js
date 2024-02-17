@@ -10,6 +10,7 @@ import validateStudentMiddleware from './middlewares/validateStudentMiddleware.j
 import validateLoginMiddleware from './middlewares/validateLoginMiddleware.js';
 import authenticateUser from './middlewares/authenticateUserMiddleware.js';
 import { timeStamp } from 'node:console';
+import jwt from 'jsonwebtoken';
 import PaymentBooking from './models/PaymentBookingModel.js';
 
 const PORT = process.env.PORT || 3000;
@@ -40,6 +41,14 @@ function generatePassword() {
   }
   return password;
 }
+
+const secretKey = "123";
+
+const generateToken = (id) => {
+    return jwt.sign({ id }, secretKey, {
+      expiresIn: "30d",
+    });
+  };
 
 function generateQueueId() {
   const length = 10;
@@ -195,14 +204,14 @@ app.patch('/student-info/:id', async (req, res) => {
 
 app.post('/login', validateLoginMiddleware, authenticateUser, async (req, res) => {
   try {
-    const { student, session } = req;
+    const { student } = req;
 
     res.status(200).json({
       message: 'SUCCESS! User logged in',
       user: {
         username: student.username,
       },
-      sessionToken: session._id,
+      token: generateToken(student._id),
     });
   } catch (error) {
     res.status(400).json({

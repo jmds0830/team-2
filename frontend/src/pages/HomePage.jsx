@@ -5,9 +5,9 @@ import {
 } from '@mantine/core';
 import styles from '../styles/HomePage.module.css';
 import EnSysBanner from '../components/EnSysBanner';
-import NullDashboard from '../components/NullDashboard';
 import StudentDashboard from '../components/StudentDashboard';
-import AdminDashboard from '../components/AdminDashboard';
+import NullDashboard from '../components/NullDashboard';
+
 
 function HomePage() {
   const [imageSource, setImageSource] = useState('images/ensys-black.png');
@@ -25,6 +25,16 @@ function HomePage() {
     }
   }, [computedColorScheme]);
 
+  const [loggIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      setIsLoggedIn(true);
+      
+    }
+  }, []);
+
   return (
     <div>
       <EnSysBanner />
@@ -35,7 +45,7 @@ function HomePage() {
             <p>EnSys is now up and running! You can now enroll and book your payment schedules online!</p>
           </div>
           <div className={styles.appIntroContainer}>
-            <img src={imageSource} className={styles.articleImage} />
+            <img alt="img" src={imageSource} className={styles.articleImage} />
             <p>EnSys is an online enrollment system for students.
               Created in 2024, Ensys aims to provide a covenient registration process
               for students. It allows students to use their online school accounts
@@ -46,7 +56,7 @@ function HomePage() {
             <p>Trouble using EnSys? Click the link to read the EnSys manual.</p>
           </div>
         </div>
-        <NullDashboard />
+        {loggIn ? <StudentDashboard/>: <NullDashboard />}
       </div>
     </div>
   );

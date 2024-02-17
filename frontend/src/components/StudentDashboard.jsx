@@ -16,6 +16,14 @@ function StudentDashboard() {
     navigate('/my-schedule/:id');
   }
 
+  const handleClick = () => {
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+    
+}
+
   return (
     <div className={styles.studentDashboard}>
       <Flex
@@ -58,7 +66,7 @@ function StudentDashboard() {
           variant="filled"
           color="gray"
           fullWidth
-        >Log Out</Button>
+          onClick={handleClick}>Log Out</Button>
       </Flex >
     </div>
   );
