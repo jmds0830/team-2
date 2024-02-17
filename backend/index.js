@@ -11,6 +11,7 @@ import validateLoginMiddleware from './middlewares/validateLoginMiddleware.js';
 import authenticateUser from './middlewares/authenticateUserMiddleware.js';
 import { timeStamp } from 'node:console';
 import jwt from 'jsonwebtoken';
+import PaymentBooking from './models/PaymentBookingModel.js';
 
 const PORT = process.env.PORT || 3000;
 
@@ -48,6 +49,18 @@ const generateToken = (id) => {
       expiresIn: "30d",
     });
   };
+
+function generateQueueId() {
+  const length = 10;
+  const charset =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let queueId = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    queueId += charset[randomIndex];
+  }
+  return queueId;
+}
 
 async function assignCollege(course) {
   let college;
@@ -222,6 +235,74 @@ app.get('/payment-booking/:id', async (req, res) => {
   } catch (error) {
     res.status(400).json({
       message: 'Error! Cannot fetch student data.',
+      error: error.message,
+    });
+  }
+});
+
+app.post('/payment-booking/:id/book-schedule', async (req, res) => {
+  try {
+    const student = await Student.findOne({ studentId: req.params.id });
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    const { date, time } = req.body;
+    const queueId = generateQueueId();
+
+    const newPaymentBooking = new PaymentBooking({
+      queueId: await queueId,
+      studentId: student.studentId,
+      date,
+      time,
+    });
+
+    const existingDate = await PaymentBooking.findOne({ date });
+    const existingTime = await PaymentBooking.findOne({ time });
+    const existingStudent = await PaymentBooking.findOne({ studentId: student.studentId });
+
+    if (existingDate && existingTime) {
+      res.status(400).json({
+        message: 'Date and time slot is already booked by another student.',
+      });
+      return;
+    }
+
+    if (existingStudent) {
+      res.status(400).json({
+        message: 'Student with same student id has already booked a payment schedule.',
+      });
+      return;
+    }
+
+    await newPaymentBooking.save();
+
+    res.status(200).json({
+      message: 'SUCCESS! Payment Schedule booked.',
+      newPaymentBooking,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'Error! Cannot book payment schedule.',
+      error: error.message,
+    });
+  }
+});
+
+app.get('/payment-booking/:id/payment-schedule', async (req, res) => {
+  try {
+    const paymentBooking = await PaymentBooking.find({ studentId: req.params.id });
+    if (!paymentBooking) {
+      return res.status(404).json({
+        message: 'Error! Payment schedule not found.',
+      });
+    }
+    res.status(200).json({
+      paymentBooking,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'Error! Cannot fetch payment schedule data.',
       error: error.message,
     });
   }
