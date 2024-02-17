@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import {
   Button,
@@ -19,6 +19,7 @@ function NullDashboard() {
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
 
+  const { username } = useParams();
   const navigate = useNavigate();
 
   const handleNavToStudReg = () => {
@@ -37,8 +38,6 @@ function NullDashboard() {
     setErrors({});
   };
 
-  const [loggIn, setIsLoggedIn] = useState(false);
-
   const handleLogin = async () => {
     try {
       const response = await fetch('http://localhost:3000/login', {
@@ -51,24 +50,20 @@ function NullDashboard() {
           password: formData.password,
         }),
       });
-
+      
       const result = await response.json();
-
-      const {token} = response;
-
+  
       if (response.ok) {
+        const { username } = result.user;
         toast.success('Logged in successfully!');
         setOpen(false);
         setFormData(initialFormData);
         setErrors({});
-        navigate('/');
-        localStorage.setItem("token", token);
-
-        setIsLoggedIn(true);
-
+        navigate(`/${username}`);
+  
         setTimeout(() => {
           window.location.reload();
-        }, 1000);
+        }, 500);
       } else {
         toast.error(result.message || 'An error occurred while logging in.');
       }

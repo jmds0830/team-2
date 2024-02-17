@@ -5,12 +5,12 @@ import styles from '../styles/PaymentSchedulePage.module.css';
 
 function PaymentSchedulePage() {
   const [paymentBookingData, setPaymentBookingData] = useState([]);
-  const { id } = useParams();
+  const { username } = useParams();
 
   async function fetchPaymentBookingData() {
     try {
-      if (!id) return;
-      const response = await fetch(`http://localhost:3000/payment-booking/${id}/payment-schedule`);
+      if (!username) return;
+      const response = await fetch(`http://localhost:3000/payment-booking/${username}/payment-schedule`);
       const data = await response.json();
       setPaymentBookingData(data.paymentBooking);
     } catch (error) {
@@ -20,7 +20,7 @@ function PaymentSchedulePage() {
 
   useEffect(() => {
     fetchPaymentBookingData();
-  }, [id]);
+  }, [username]);
 
   return (
     <div>

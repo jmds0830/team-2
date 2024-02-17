@@ -9,6 +9,7 @@ const studentSchema = new Schema({
   username: String,
   studentId: Number,
   password: String,
+  token: String,
   subjects: [
     {
       subjectName: String,
