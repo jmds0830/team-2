@@ -118,21 +118,33 @@ function SubjectRegistrationPage() {
 
   const miscellaneousFee = 1902.24;
   let totalUnits = 0;
-  let totalAmount = 0;
+  let totalAmount = miscellaneousFee;
+
+  if (studentData && studentData.student && studentData.student.subjects) {
+    const subjects = studentData.student.subjects;
+
+    for (let i = 0; i < subjects.length; i++) {
+      totalUnits += subjects[i].units;
+    }
+
+    totalAmount += totalUnits * 1000;
+    totalAmount = parseFloat(totalAmount.toFixed(2));
+  }
 
   useEffect(() => {
+    let totalUnits = 0;
+    let totalAmount = miscellaneousFee;
     if (studentData && studentData.student && studentData.student.subjects) {
       const subjects = studentData.student.subjects;
-      if (totalAmount === 0) {
-        totalAmount = miscellaneousFee;
-      }
 
       for (let i = 0; i < subjects.length; i++) {
         totalUnits += subjects[i].units;
-        totalAmount = miscellaneousFee + totalUnits * 1000;
-        totalAmount = parseFloat(totalAmount.toFixed(2));
       }
+
+      totalAmount += totalUnits * 1000;
+      totalAmount = parseFloat(totalAmount.toFixed(2));
     }
+
     setTotalUnits(totalUnits);
     setTotalAmount(totalAmount);
   }, [studentData]);
