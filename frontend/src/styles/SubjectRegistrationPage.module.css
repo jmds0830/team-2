@@ -105,3 +105,11 @@
 .studentName {
   margin-top: 10px;
 }
+
+.rows {
+  text-align: left;
+}
+
+.paymentButton {
+  margin-block: 30px;
+}
