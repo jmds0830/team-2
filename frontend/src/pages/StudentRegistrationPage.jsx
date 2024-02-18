@@ -19,13 +19,13 @@ function StudentRegistrationPage() {
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { username } = useParams();
 
   useEffect(() => {
-    if (id) {
-      handleSubmit(id);
+    if (username) {
+      handleSubmit(username);
     }
-  }, [id]);
+  }, [username]);
 
   async function handleSubmit() {
     try {
@@ -138,7 +138,7 @@ function StudentRegistrationPage() {
         try {
           toast.success('Success! Your form was submitted successfully.');
           setTimeout(() => {
-            navigate(`/student-info/${result.newStudent.studentId}`);
+            navigate(`/student-info/${result.newStudent.username}`);
           }, 2000);
         } catch (error) {
           console.error('Error submitting form:', error);

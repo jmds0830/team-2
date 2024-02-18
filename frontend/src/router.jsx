@@ -5,7 +5,8 @@ import StudentRegistrationPage from './pages/StudentRegistrationPage';
 import StudentInfoPage from './pages/StudentInfoPage';
 import PaymentBookingPage from './pages/PaymentBookingPage';
 import PaymentSchedulePage from './pages/PaymentSchedulePage';
-import StudentShedulePage from './pages/StudentSchedulePage';
+import StudentSchedulePage from './pages/StudentSchedulePage';
+import SubjectRegistrationPage from './pages/SubjectRegistrationPage';
 
 const router = createBrowserRouter([
   {
@@ -17,32 +18,40 @@ const router = createBrowserRouter([
     element: <HomePage />,
   },
   {
+    path: '/:username',
+    element: <HomePage />,
+  },
+  {
     path: '/register',
     element: <StudentRegistrationPage />,
   },
   {
-    path: '/student-info/:id',
+    path: '/student-info/:username',
     element: <StudentInfoPage />,
   },
   {
-    path: '/student-info/:id/edit-information',
+    path: '/student-info/:username/edit-information',
     element: <StudentInfoPage />,
   },
   {
-    path: '/student-info/:id/change-password',
+    path: '/student-info/:username/change-password',
     element: <StudentInfoPage />,
   },
   {
-    path: '/payment-booking/:id',
+    path: '/subject-registration/:username',
+    element: <SubjectRegistrationPage />,
+  },
+  {
+    path: '/payment-booking/:username',
     element: <PaymentBookingPage />,
   },
   {
-    path: '/payment-booking/:id/payment-schedule',
+    path: '/payment-booking/:username/payment-schedule',
     element: <PaymentSchedulePage />,
   },
   {
-    path: '/my-schedule/:id',
-    element: <StudentShedulePage />,
+    path: '/my-schedule/:username',
+    element: <StudentSchedulePage />,
   },
   {
     path: '*',

@@ -1,5 +1,56 @@
-.container {
+.grid {
+  display: flex;
+  gap: 30px;
+}
+
+.title {
+  margin-bottom: 40px;
+}
+
+.studentInfoContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.studentInfoTitle {
+  padding-right: 10px;
+}
+
+.scheduleContainer {
   overflow-x: hidden;
-  max-height: 550px;
-  width: 1000px;
+  max-height: 250px;
+  width: 850px;
+  border: solid 1px gray;
+  padding: 20px;
+}
+
+.subjectContainer {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding-inline: 50px;
+}
+
+.subjectInfoContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.unitContainer {
+  border: solid 1px gray;
+  padding: 20px;
+}
+
+.button {
+  margin-top: 30px;
+}
+
+.name {
+  font-size: large;
+  font-weight: bolder;
+}
+
+hr {
+  width: 100%;
 }

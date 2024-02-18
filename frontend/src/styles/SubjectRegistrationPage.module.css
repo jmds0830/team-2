@@ -1,0 +1,115 @@
+.mainContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 1200px;
+  height: 550px;
+  border: solid 1px gray;
+  margin-top: 70px;
+}
+
+.subContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: baseline;
+  max-width: 690px;
+  max-height: 540px;
+  margin-right: 10px;
+}
+
+.scheduleContainer {
+  width: 690px;
+  height: 280px;
+  border: solid 1px gray;
+  margin-top: 10px;
+  overflow-y: scroll;
+}
+
+.paymentInfoContainer {
+  width: 690px;
+  height: 280px;
+  border: solid 1px gray;
+  margin-top: 10px;
+  overflow-y: scroll;
+}
+
+.subjectListerContainer {
+  overflow-y: scroll;
+  width: 480px;
+  height: 490px;
+  border: solid 1px gray;
+  margin-inline: 10px;
+}
+
+.searchBar {
+  width: 480px;
+  padding-left: 10px;
+  margin: 10px;
+}
+
+.subjectLister {
+  display: flex;
+  justify-content: space-between;
+  text-align: left;
+  padding-inline: 20px;
+  padding-block: 10px;
+  border: solid 1px;
+  border-radius: 20px;
+  margin: 10px;
+}
+
+.subjectInfoContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.studentSubjectContainer {
+  display: flex;
+  border: solid 1px;
+  border-radius: 20px;
+  text-align: left;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+  margin-inline: 10px;
+}
+
+.studentSubjectInfo {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  padding-block: 10px;
+}
+
+.subjectRemove {
+  margin-right: 20px;
+}
+
+.name {
+  font-weight: bolder;
+}
+
+.studentNameContainer {
+  display: flex;
+  padding-inline: 10px;
+  height: 40px;
+}
+
+.studentName {
+  margin-top: 10px;
+}
+
+.rows {
+  text-align: left;
+}
+
+.paymentButton {
+  margin-block: 30px;
+}

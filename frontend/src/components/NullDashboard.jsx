@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import {
   Button,
@@ -19,6 +19,7 @@ function NullDashboard() {
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
 
+  const { username } = useParams();
   const navigate = useNavigate();
 
   const handleNavToStudReg = () => {
@@ -49,15 +50,20 @@ function NullDashboard() {
           password: formData.password,
         }),
       });
-
+      
       const result = await response.json();
-
+  
       if (response.ok) {
+        const { username } = result.user;
         toast.success('Logged in successfully!');
         setOpen(false);
         setFormData(initialFormData);
         setErrors({});
-        navigate('/');
+        navigate(`/${username}`);
+  
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       } else {
         toast.error(result.message || 'An error occurred while logging in.');
       }
@@ -102,6 +108,8 @@ function NullDashboard() {
   };
 
   const isLoginDisabled = formData.username === '' || formData.password === '';
+
+  
 
   return (
     <Flex

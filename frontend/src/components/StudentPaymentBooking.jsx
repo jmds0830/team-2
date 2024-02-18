@@ -4,27 +4,30 @@ import { Button } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
 import toast from 'react-hot-toast';
 import styles from './styles/StudentPaymentBooking.module.css';
+import { useTotalContext } from './TotalContext';
 
 function StudentPaymentBooking() {
   const [studentData, setStudentData] = useState([]);
   const [selectedDateTime, setSelectedDateTime] = useState(null);
+  const { totalUnits, totalAmount } = useTotalContext();
 
-  const { id } = useParams();
+  const { username } = useParams();
   const navigate = useNavigate();
 
   async function fetchStudentData() {
     try {
-      if (!id) return;
-      const response = await fetch(`http://localhost:3000/payment-booking/${id}`);
+      if (!username) return;
+      const response = await fetch(
+        `http://localhost:3000/payment-booking/${username}`
+      );
       const data = await response.json();
       setStudentData(data.student);
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   useEffect(() => {
     fetchStudentData();
-  }, [id]);
+  }, [username]);
 
   const handleBookPaymentSched = async () => {
     try {
@@ -34,24 +37,29 @@ function StudentPaymentBooking() {
       }
 
       const date = selectedDateTime.toISOString().split('T')[0];
-      const time = selectedDateTime.toLocaleTimeString('en-US', { hour12: true });
-
-      const response = await fetch(`http://localhost:3000/payment-booking/${id}/book-schedule`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          date,
-          time,
-        }),
+      const time = selectedDateTime.toLocaleTimeString('en-US', {
+        hour12: false,
       });
+
+      const response = await fetch(
+        `http://localhost:3000/payment-booking/${username}/book-schedule`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            date,
+            time,
+          }),
+        }
+      );
 
       if (response.ok) {
         const responseData = await response.json();
         toast.success(responseData.message);
         setTimeout(() => {
-          navigate(`/payment-booking/${id}/payment-schedule`);
+          navigate(`/payment-booking/${username}/payment-schedule`);
         }, 2000);
       } else {
         const responseData = await response.json();
@@ -68,7 +76,9 @@ function StudentPaymentBooking() {
         <div className={styles.leftContainer} key={index}>
           <p>
             <span className={styles.label}>Name: </span>
-            <span className={styles.info}>{student.firstName} {student.lastName}</span>
+            <span className={styles.info}>
+              {student.firstName} {student.lastName}
+            </span>
           </p>
           <p>
             <span className={styles.label}>Student Number: </span>
@@ -85,8 +95,12 @@ function StudentPaymentBooking() {
           <p>
             <span className={styles.label}>Payment Info: </span>
           </p>
-          <p className={styles.indent}>Total Number of Units: __ / 30</p>
-          <p className={styles.indent}>Total Tuition Amount: Php ________</p>
+          <p className={styles.indent}>
+            Total Number of Units: {totalUnits} / 30
+          </p>
+          <p className={styles.indent}>
+            Total Tuition Amount: Php {totalAmount}
+          </p>
         </div>
       ))}
       <div className={styles.rightContainer}>
@@ -103,7 +117,8 @@ function StudentPaymentBooking() {
           variant="filled"
           color="gray"
           onClick={handleBookPaymentSched}
-        >Book Payment Schedule
+        >
+          Book Payment Schedule
         </Button>
       </div>
     </div>
