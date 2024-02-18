@@ -10,7 +10,6 @@
 .studentInfoContainer {
   display: flex;
   justify-content: space-between;
-  padding-inline: 10px;
 }
 
 .studentInfoTitle {
@@ -19,19 +18,33 @@
 
 .scheduleContainer {
   overflow-x: hidden;
-  max-height: 400px;
+  max-height: 250px;
   width: 850px;
   border: solid 1px;
-  border-radius: 20px;
   padding: 20px;
+}
+
+.subjectContainer {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding-inline: 50px;
+}
+
+.subjectInfoContainer {
+  display: flex;
+  justify-content: space-between;
 }
 
 .unitContainer {
   border: solid 1px;
-  border-radius: 20px;
   padding: 20px;
 }
 
 .button {
   margin-top: 30px;
+}
+
+hr {
+  width: 100%;
 }
