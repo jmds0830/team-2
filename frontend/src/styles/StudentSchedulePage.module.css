@@ -20,7 +20,7 @@
   overflow-x: hidden;
   max-height: 250px;
   width: 850px;
-  border: solid 1px;
+  border: solid 1px gray;
   padding: 20px;
 }
 
@@ -37,7 +37,7 @@
 }
 
 .unitContainer {
-  border: solid 1px;
+  border: solid 1px gray;
   padding: 20px;
 }
 
