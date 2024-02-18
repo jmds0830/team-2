@@ -110,9 +110,9 @@ app.post('/register', validateStudentMiddleware, async (req, res) => {
   }
 });
 
-app.get('/student-info/:id', async (req, res) => {
+app.get('/student-info/:username', async (req, res) => {
   try {
-    const student = await Student.find({ studentId: req.params.id });
+    const student = await Student.find({ username: req.params.username });
     if (!student) {
       return res.status(404).json({
         message: 'Error! Student not found.',
@@ -129,9 +129,9 @@ app.get('/student-info/:id', async (req, res) => {
   }
 });
 
-app.patch('/student-info/:id', async (req, res) => {
+app.patch('/student-info/:username', async (req, res) => {
   try {
-    const student = await Student.findOne({ studentId: req.params.id });
+    const student = await Student.findOne({ username: req.params.username });
 
     if (!student) {
       res.status(404).json({

@@ -34,6 +34,7 @@
 .subjectInfoContainer {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
 }
 
 .unitContainer {
@@ -43,6 +44,11 @@
 
 .button {
   margin-top: 30px;
+}
+
+.name {
+  font-size: large;
+  font-weight: bolder;
 }
 
 hr {

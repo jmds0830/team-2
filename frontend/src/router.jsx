@@ -26,15 +26,15 @@ const router = createBrowserRouter([
     element: <StudentRegistrationPage />,
   },
   {
-    path: '/student-info/:id',
+    path: '/student-info/:username',
     element: <StudentInfoPage />,
   },
   {
-    path: '/student-info/:id/edit-information',
+    path: '/student-info/:username/edit-information',
     element: <StudentInfoPage />,
   },
   {
-    path: '/student-info/:id/change-password',
+    path: '/student-info/:username/change-password',
     element: <StudentInfoPage />,
   },
   {
@@ -50,7 +50,7 @@ const router = createBrowserRouter([
     element: <PaymentSchedulePage />,
   },
   {
-    path: '/my-schedule/:id',
+    path: '/my-schedule/:username',
     element: <StudentSchedulePage />,
   },
   {

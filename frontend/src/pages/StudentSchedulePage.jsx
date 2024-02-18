@@ -5,16 +5,18 @@ import { Button } from '@mantine/core';
 import { useParams } from 'react-router-dom';
 
 function StudentSchedulePage() {
-  const [studentData, setStudentData] = useState([]);
-  const { id } = useParams();
+  const [studentData, setStudentData] = useState({});
+  const { username } = useParams();
 
   const currentYear = new Date().getFullYear();
   const nextYear = currentYear + 1;
 
   async function fetchData() {
     try {
-      if (!id) return;
-      const response = await fetch(`http://localhost:3000/student-info/${id}`);
+      if (!username) return;
+      const response = await fetch(
+        `http://localhost:3000/subject-registration/${username}`
+      );
       const data = await response.json();
       setStudentData(data);
     } catch (error) {
@@ -34,39 +36,42 @@ function StudentSchedulePage() {
 
   useEffect(() => {
     fetchData();
-  }, [id]);
+  }, [username, fetchData]);
 
   return (
     <>
       <EnSysBanner />
-
-      <div>
+      <div className={styles.mainContainer}>
         <h2 className={styles.title}>
           Schedule for 1st Semester A.Y. {currentYear} - {nextYear}
         </h2>
-        {studentData.student?.map((student, index) => (
-          <div className={styles.studentInfoContainer} key={index}>
+        {studentData.student && (
+          <div className={styles.studentInfoContainer}>
             <h3>
               <span className={styles.studentInfoTitle}>Name: </span>
               <span>
-                {student.lastName}, {student.firstName}
+                {studentData.student.lastName}, {studentData.student.firstName}
               </span>
             </h3>
             <h3>
               <span className={styles.studentInfoTitle}>Student Number: </span>
-              <span>{student.studentId}</span>
+              <span>{studentData.student.studentId}</span>
             </h3>
           </div>
-        ))}
+        )}
         <div className={styles.grid}>
           <div className={styles.scheduleContainer}>
-            {studentData.student &&
-            studentData.student[0].subjects?.length > 0 ? (
-              studentData.student[0].subjects?.map((subject, index) => (
+            {studentData.student && studentData.student.subjects?.length > 0 ? (
+              studentData.student.subjects?.map((subject, index) => (
                 <div className={styles.subjectContainer} key={index}>
                   <div className={styles.subjectInfoContainer}>
-                    <h3>Subject: {subject?.subjectName}</h3>
-                    <h3>Code: {subject.subjectCode}</h3>
+                    <span>
+                      Subject:{' '}
+                      <span className={styles.name}>
+                        {subject?.subjectName}
+                      </span>
+                    </span>
+                    <span>Code: {subject.subjectCode}</span>
                   </div>
 
                   <span>Units: {subject.units}</span>

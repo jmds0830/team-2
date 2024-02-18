@@ -2,12 +2,12 @@ import EnSysBanner from '../components/EnSysBanner';
 import toast, { Toaster } from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import styles from '../styles/SubjectRegistrationPage.module.css';
-import { Button, Card } from '@mantine/core';
+import { Button, Table } from '@mantine/core';
 import { useParams } from 'react-router-dom';
 
 function SubjectRegistrationPage() {
   const [subjectData, setSubjectData] = useState([]);
-  const [studentData, setStudentData] = useState([]);
+  const [studentData, setStudentData] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
 
   const { username } = useParams();
@@ -119,13 +119,46 @@ function SubjectRegistrationPage() {
 
   if (studentData && studentData.student && studentData.student.subjects) {
     const subjects = studentData.student.subjects;
+    if (totalAmount === 0) {
+      totalAmount = miscellaneousFee;
+    }
 
     for (let i = 0; i < subjects.length; i++) {
       totalUnits += subjects[i].units;
-      totalAmount = totalUnits * 1000 + miscellaneousFee;
+      totalAmount = miscellaneousFee + totalUnits * 1000;
       totalAmount = totalAmount.toFixed(2);
     }
   }
+
+  const rows = studentData.student?.subjects?.map((subject) => (
+    <Table.Tr key={subject.subjectCode}>
+      <Table.Td>{subject.subjectCode}</Table.Td>
+      <Table.Td>{subject.subjectName}</Table.Td>
+      <Table.Td>{subject.units}</Table.Td>
+      <Table.Td>{subject.date}</Table.Td>
+      <Table.Td>₱{(subject.units * 1000).toFixed(2)}</Table.Td>
+    </Table.Tr>
+  ));
+
+  const miscellaneous = (
+    <Table.Tr>
+      <Table.Td>N/A</Table.Td>
+      <Table.Td>Miscellaneous Fee</Table.Td>
+      <Table.Td>0</Table.Td>
+      <Table.Td>N/A</Table.Td>
+      <Table.Td>₱{miscellaneousFee}</Table.Td>
+    </Table.Tr>
+  );
+
+  const total = (
+    <Table.Tr>
+      <Table.Td></Table.Td>
+      <Table.Td className={styles.name}>Total Units:</Table.Td>
+      <Table.Td className={styles.name}>{totalUnits}</Table.Td>
+      <Table.Td className={styles.name}>Total Amount:</Table.Td>
+      <Table.Td className={styles.name}>₱{totalAmount}</Table.Td>
+    </Table.Tr>
+  );
 
   return (
     <div>
@@ -226,17 +259,30 @@ function SubjectRegistrationPage() {
           </div>
 
           <div className={styles.paymentInfoContainer}>
-            <p>
-              Miscellaneous Fee:{' '}
-              <span className={styles.name}>₱{miscellaneousFee}</span>
-            </p>
-            <p>
-              Total Units: <span className={styles.name}>{totalUnits}</span>
-            </p>
-            <p>
-              Total Amount: <span className={styles.name}>₱{totalAmount}</span>
-            </p>
-            <Button variant="filled" color="gray">
+            <div>
+              <Table className={styles.table}>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>Subject Code</Table.Th>
+                    <Table.Th>Subject Name</Table.Th>
+                    <Table.Th>Units</Table.Th>
+                    <Table.Th>Schedule</Table.Th>
+                    <Table.Th>Amount</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody className={styles.rows}>
+                  {rows}
+                  {miscellaneous}
+                  {total}
+                </Table.Tbody>
+              </Table>
+            </div>
+
+            <Button
+              className={styles.paymentButton}
+              variant="filled"
+              color="gray"
+            >
               Go to Payment Booking
             </Button>
           </div>

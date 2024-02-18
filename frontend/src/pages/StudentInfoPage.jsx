@@ -14,7 +14,7 @@ function StudentInfoPage() {
   const [editedValues, setEditedValues] = useState({});
   const [errors, setErrors] = useState({});
 
-  const { id } = useParams();
+  const { username } = useParams();
   const navigate = useNavigate();
 
   const isDisabled =
@@ -24,7 +24,7 @@ function StudentInfoPage() {
 
   const showModal = () => {
     setIsModalOpen(true);
-    navigate(`/student-info/${id}/change-password`);
+    navigate(`/student-info/${username}/change-password`);
     isDisabled;
   };
 
@@ -36,20 +36,23 @@ function StudentInfoPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:3000/student-info/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ password: editedValues.newPassword }),
-      });
+      const response = await fetch(
+        `http://localhost:3000/student-info/${username}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ password: editedValues.newPassword }),
+        }
+      );
 
       const result = await response.json();
       console.log('Password updated', result);
 
       if (response.ok) {
         setIsModalOpen(false);
-        navigate(`/student-info/${id}`);
+        navigate(`/student-info/${username}`);
         setErrors({});
         setEditedValues((prevValues) => ({
           ...prevValues,
@@ -66,7 +69,7 @@ function StudentInfoPage() {
 
   const handleCancel = () => {
     setIsModalOpen(false);
-    navigate(`/student-info/${id}`);
+    navigate(`/student-info/${username}`);
     setErrors({});
     setEditedValues((prevValues) => ({
       ...prevValues,
@@ -78,8 +81,10 @@ function StudentInfoPage() {
 
   async function fetchStudentData() {
     try {
-      if (!id) return;
-      const response = await fetch(`http://localhost:3000/student-info/${id}`);
+      if (!username) return;
+      const response = await fetch(
+        `http://localhost:3000/student-info/${username}`
+      );
       const data = await response.json();
       setStudentData(data.student);
     } catch (error) {
@@ -89,12 +94,12 @@ function StudentInfoPage() {
 
   useEffect(() => {
     fetchStudentData();
-  }, [id]);
+  }, [username]);
 
   const handleEdit = () => {
     setEditMode(true);
     setEditedValues({ ...studentData });
-    navigate(`/student-info/${id}/edit-information`);
+    navigate(`/student-info/${username}/edit-information`);
   };
 
   const handleSave = async () => {
@@ -105,13 +110,16 @@ function StudentInfoPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:3000/student-info/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(editedValues),
-      });
+      const response = await fetch(
+        `http://localhost:3000/student-info/${username}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(editedValues),
+        }
+      );
 
       const result = await response.json();
       console.log('Student updated:', result);
@@ -129,7 +137,7 @@ function StudentInfoPage() {
       if (response.ok) {
         setEditMode(false);
         fetchStudentData();
-        navigate(`/student-info/${id}`);
+        navigate(`/student-info/${editedValues.username}`);
         toast.success('Student information updated successfully.');
       }
     } catch (error) {
