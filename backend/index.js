@@ -61,6 +61,18 @@ function generateToken(studentId) {
   return token;
 }
 
+function generateQueueId() {
+  const length = 10;
+  const charset =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let queueId = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    queueId += charset[randomIndex];
+  }
+  return queueId;
+}
+
 app.post('/register', validateStudentMiddleware, async (req, res) => {
   try {
     const { firstName, lastName, course, email, username } = req.body;
