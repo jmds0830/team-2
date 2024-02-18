@@ -5,11 +5,9 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import Student from './models/StudentRegisterModel.js';
-import Session from './models/SessionModel.js';
 import validateStudentMiddleware from './middlewares/validateStudentMiddleware.js';
 import validateLoginMiddleware from './middlewares/validateLoginMiddleware.js';
 import authenticateUser from './middlewares/authenticateUserMiddleware.js';
-import { timeStamp } from 'node:console';
 import jwt from 'jsonwebtoken';
 import PaymentBooking from './models/PaymentBookingModel.js';
 
