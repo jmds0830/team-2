@@ -22,6 +22,16 @@ function StudentSchedulePage() {
     }
   }
 
+  let totalUnits = 0;
+
+  if (studentData && studentData.student && studentData.student.subjects) {
+    const subjects = studentData.student.subjects;
+
+    for (let i = 0; i < subjects.length; i++) {
+      totalUnits += subjects[i].units;
+    }
+  }
+
   useEffect(() => {
     fetchData();
   }, [id]);
@@ -50,7 +60,8 @@ function StudentSchedulePage() {
         ))}
         <div className={styles.grid}>
           <div className={styles.scheduleContainer}>
-            {studentData.student && studentData.student.length > 0 ? (
+            {studentData.student &&
+            studentData.student[0].subjects?.length > 0 ? (
               studentData.student[0].subjects?.map((subject, index) => (
                 <div className={styles.subjectContainer} key={index}>
                   <div className={styles.subjectInfoContainer}>
@@ -71,7 +82,7 @@ function StudentSchedulePage() {
           </div>
           <div className={styles.unitContainer}>
             <h4>Total Number of Units</h4>
-            <h4>0</h4>
+            <h4>{totalUnits}</h4>
             <h4>Maximum Number of Units</h4>
             <h4>30</h4>
           </div>
