@@ -10,6 +10,17 @@ const studentSchema = new Schema({
   studentId: Number,
   password: String,
   token: String,
+  subjects: [
+    {
+      subjectName: String,
+      subjectCode: String,
+      units: Number,
+      date: String,
+      time: String,
+      instructor: String,
+      slots: Number,
+    },
+  ],
   photo: {
     data: Buffer,
     contentType: String,
