@@ -12,7 +12,9 @@ function PaymentBookingPage() {
   async function fetchStudentData() {
     try {
       if (!id) return;
-      const response = await fetch(`http://localhost:3000/payment-booking/${id}`);
+      const response = await fetch(
+        `http://localhost:3000/payment-booking/${id}`
+      );
       const data = await response.json();
       setStudentData(data.student);
     } catch (error) {
@@ -26,7 +28,7 @@ function PaymentBookingPage() {
 
   return (
     <div>
-      <Toaster position='top-center' />
+      <Toaster position="top-center" />
       <EnSysBanner />
       <div>
         <StudentPaymentBooking />

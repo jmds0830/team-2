@@ -3,14 +3,17 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import styles from '../styles/SubjectRegistrationPage.module.css';
 import { Button, Table } from '@mantine/core';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useTotalContext } from '../components/TotalContext';
 
 function SubjectRegistrationPage() {
   const [subjectData, setSubjectData] = useState([]);
   const [studentData, setStudentData] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
+  const { setTotalUnits, setTotalAmount } = useTotalContext();
 
   const { username } = useParams();
+  const navigate = useNavigate();
 
   async function fetchSubjectData() {
     try {
@@ -113,22 +116,26 @@ function SubjectRegistrationPage() {
     }
   };
 
+  const miscellaneousFee = 1902.24;
   let totalUnits = 0;
   let totalAmount = 0;
-  let miscellaneousFee = 1902.24;
 
-  if (studentData && studentData.student && studentData.student.subjects) {
-    const subjects = studentData.student.subjects;
-    if (totalAmount === 0) {
-      totalAmount = miscellaneousFee;
-    }
+  useEffect(() => {
+    if (studentData && studentData.student && studentData.student.subjects) {
+      const subjects = studentData.student.subjects;
+      if (totalAmount === 0) {
+        totalAmount = miscellaneousFee;
+      }
 
-    for (let i = 0; i < subjects.length; i++) {
-      totalUnits += subjects[i].units;
-      totalAmount = miscellaneousFee + totalUnits * 1000;
-      totalAmount = totalAmount.toFixed(2);
+      for (let i = 0; i < subjects.length; i++) {
+        totalUnits += subjects[i].units;
+        totalAmount = miscellaneousFee + totalUnits * 1000;
+        totalAmount = parseFloat(totalAmount.toFixed(2));
+      }
     }
-  }
+    setTotalUnits(totalUnits);
+    setTotalAmount(totalAmount);
+  }, [studentData]);
 
   const rows = studentData.student?.subjects?.map((subject) => (
     <Table.Tr key={subject.subjectCode}>
@@ -159,6 +166,10 @@ function SubjectRegistrationPage() {
       <Table.Td className={styles.name}>₱{totalAmount}</Table.Td>
     </Table.Tr>
   );
+
+  const handleNavToPaymentBooking = () => {
+    navigate(`/payment-booking/${username}`);
+  };
 
   return (
     <div>
@@ -282,6 +293,7 @@ function SubjectRegistrationPage() {
               className={styles.paymentButton}
               variant="filled"
               color="gray"
+              onClick={handleNavToPaymentBooking}
             >
               Go to Payment Booking
             </Button>

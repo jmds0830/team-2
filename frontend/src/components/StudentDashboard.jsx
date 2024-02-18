@@ -1,7 +1,4 @@
-import {
-  Button,
-  Flex,
-} from '@mantine/core';
+import { Button, Flex } from '@mantine/core';
 import styles from './styles/StudentDashboard.module.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -30,14 +27,14 @@ function StudentDashboard() {
   const handleNavToPaymentBooking = async () => {
     try {
       if (!username) return;
-  
+
       const response = await fetch(`http://localhost:3000/${username}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         if (data.message === 'Payment Schedule booked for student') {
@@ -52,29 +49,36 @@ function StudentDashboard() {
   };
 
   const handleNavToSchedule = () => {
-    navigate('/my-schedule/:id');
-  }
+    navigate(`/my-schedule/${username}`);
+  };
+
+  const handleNavToSubjRegistration = () => {
+    navigate(`/subject-registration/${username}`);
+  };
 
   const handleLogout = async () => {
     try {
       const response = await fetch('http://localhost:3000/logout', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem("token")}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username })
+        body: JSON.stringify({ username }),
       });
 
       if (response.ok) {
-        localStorage.removeItem("token");
+        localStorage.removeItem('token');
         setTimeout(() => {
           window.location.reload();
         }, 500);
         navigate('/');
       } else {
         const data = await response.json();
-        console.error('Error logging out:', data.error || 'An error occurred while logging out.');
+        console.error(
+          'Error logging out:',
+          data.error || 'An error occurred while logging out.'
+        );
         toast.error(data.error || 'An error occurred while logging out.');
       }
     } catch (error) {
@@ -99,7 +103,10 @@ function StudentDashboard() {
           variant="filled"
           color="gray"
           fullWidth
-        >Registration</Button>
+          onClick={handleNavToSubjRegistration}
+        >
+          Registration
+        </Button>
         <br />
         <Button
           className={styles.sCButton}
@@ -108,7 +115,9 @@ function StudentDashboard() {
           color="gray"
           fullWidth
           onClick={handleNavToSchedule}
-        >View Schedule</Button>
+        >
+          View Schedule
+        </Button>
         <br />
         <Button
           className={styles.sCButton}
@@ -117,7 +126,9 @@ function StudentDashboard() {
           color="gray"
           fullWidth
           onClick={handleNavToPaymentBooking}
-        >Payment Booking</Button>
+        >
+          Payment Booking
+        </Button>
         <br />
         <Button
           className={styles.sBButton}
@@ -125,8 +136,11 @@ function StudentDashboard() {
           variant="filled"
           color="gray"
           fullWidth
-          onClick={handleLogout}>Log Out</Button>
-      </Flex >
+          onClick={handleLogout}
+        >
+          Log Out
+        </Button>
+      </Flex>
     </div>
   );
 }

@@ -2,15 +2,19 @@ import EnSysBanner from '../components/EnSysBanner';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from '../styles/PaymentSchedulePage.module.css';
+import { useTotalContext } from '../components/TotalContext';
 
 function PaymentSchedulePage() {
   const [paymentBookingData, setPaymentBookingData] = useState([]);
   const { username } = useParams();
+  const { totalUnits, totalAmount } = useTotalContext();
 
   async function fetchPaymentBookingData() {
     try {
       if (!username) return;
-      const response = await fetch(`http://localhost:3000/payment-booking/${username}/payment-schedule`);
+      const response = await fetch(
+        `http://localhost:3000/payment-booking/${username}/payment-schedule`
+      );
       const data = await response.json();
       setPaymentBookingData(data.paymentBooking);
     } catch (error) {
@@ -28,7 +32,10 @@ function PaymentSchedulePage() {
       <div className={styles.mainContainer}>
         {paymentBookingData.map((paymentBooking, index) => (
           <div className={styles.subContainer} key={index}>
-            <p>Please present this at the cashier window on your payment's scheduled date and time</p>
+            <p>
+              Please present this at the cashier window on your payment's
+              scheduled date and time
+            </p>
             <h2 className={styles.queueNum}>{paymentBooking.queueId}</h2>
             <p>
               <span className={styles.label}>Student ID: </span>
@@ -44,7 +51,7 @@ function PaymentSchedulePage() {
             </p>
             <p>
               <span className={styles.label}>Tuition Amount: </span>
-              <span className={styles.info}>Php __________</span>
+              <span className={styles.info}>Php {totalAmount}</span>
             </p>
           </div>
         ))}
