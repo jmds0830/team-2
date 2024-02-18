@@ -59,6 +59,9 @@ function StudentInfoPage() {
         }));
         toast.success('Password updated successfully.');
       }
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     } catch (error) {
       console.error('Error saving new password', error.message);
     }
@@ -132,6 +135,9 @@ function StudentInfoPage() {
         navigate(`/student-info/${id}`);
         toast.success('Student information updated successfully.');
       }
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     } catch (error) {
       console.error('Error fetching student info', error.message);
     }

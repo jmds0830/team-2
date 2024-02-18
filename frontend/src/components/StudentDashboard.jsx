@@ -55,20 +55,23 @@ function StudentDashboard() {
     navigate('/my-schedule/:id');
   }
 
-  const handleClick = async () => {
+  const handleLogout = async () => {
     try {
       const response = await fetch('http://localhost:3000/logout', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem("token")}`
-        }
+          'Authorization': `Bearer ${localStorage.getItem("token")}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username })
       });
 
       if (response.ok) {
         localStorage.removeItem("token");
         setTimeout(() => {
           window.location.reload();
-        }, 1000);
+        }, 500);
+        navigate('/');
       } else {
         const data = await response.json();
         console.error('Error logging out:', data.error || 'An error occurred while logging out.');
@@ -122,7 +125,7 @@ function StudentDashboard() {
           variant="filled"
           color="gray"
           fullWidth
-          onClick={handleClick}>Log Out</Button>
+          onClick={handleLogout}>Log Out</Button>
       </Flex >
     </div>
   );

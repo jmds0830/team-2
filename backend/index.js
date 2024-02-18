@@ -4,6 +4,7 @@ import process from 'node:process';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import bcrypt from 'bcryptjs';
 import Student from './models/StudentRegisterModel.js';
 import Subject from './models/SubjectModel.js';
 import validateStudentMiddleware from './middlewares/validateStudentMiddleware.js';
@@ -205,6 +206,32 @@ app.post('/login', validateLoginMiddleware, async (req, res) => {
   } catch (error) {
     res.status(400).json({
       message: 'Error! Cannot log in user.',
+      error: error.message,
+    });
+  }
+});
+
+app.post('/logout', async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    const student = await Student.findOne({ username });
+
+    if (!student) {
+      return res.status(404).json({
+        message: 'Error! Student not found.',
+      });
+    }
+
+    student.token = null;
+    await student.save();
+
+    res.status(200).json({
+      message: 'SUCCESS! User logged out',
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'Error! Cannot log out user.',
       error: error.message,
     });
   }

@@ -6,7 +6,7 @@ import {
 import { IconSun, IconMoon } from '@tabler/icons-react';
 import styles from './styles/EnSysBanner.module.css';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function EnSysBanner() {
   const [imageSource, setImageSource] = useState('/images/ensys-black.png');
@@ -17,6 +17,8 @@ function EnSysBanner() {
     getInitialValueInEffect: true,
   });
 
+  const { username } = useParams();
+
   useEffect(() => {
     if (computedColorScheme === 'dark') {
       setImageSource('/images/ensys-animated.gif');
@@ -26,7 +28,12 @@ function EnSysBanner() {
   }, [computedColorScheme]);
 
   const handleReturnToHomePage = () => {
-    navigate('/');
+    if (!username) {
+      navigate('/');
+    } else {
+      navigate(`/${username}`);
+    }
+    
   };
 
   return (
