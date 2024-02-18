@@ -1,30 +1,41 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import EnSysBanner from '../components/EnSysBanner';
 import styles from '../styles/StudentSchedulePage.module.css';
 import { Button } from '@mantine/core';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-function StudentShedulePage() {
+function StudentSchedulePage() {
   const [studentData, setStudentData] = useState([]);
   const { id } = useParams();
 
   const currentYear = new Date().getFullYear();
   const nextYear = currentYear + 1;
 
-  async function fetchStudentData() {
+  async function fetchData() {
     try {
       if (!id) return;
       const response = await fetch(`http://localhost:3000/student-info/${id}`);
       const data = await response.json();
-      setStudentData(data.student);
+      setStudentData(data);
     } catch (error) {
-      console.error('Error fetching student info', error.message);
+      console.error('Error fetching data', error.message);
+    }
+  }
+
+  let totalUnits = 0;
+
+  if (studentData && studentData.student && studentData.student.subjects) {
+    const subjects = studentData.student.subjects;
+
+    for (let i = 0; i < subjects.length; i++) {
+      totalUnits += subjects[i].units;
     }
   }
 
   useEffect(() => {
-    fetchStudentData();
+    fetchData();
   }, [id]);
+
   return (
     <>
       <EnSysBanner />
@@ -33,7 +44,7 @@ function StudentShedulePage() {
         <h2 className={styles.title}>
           Schedule for 1st Semester A.Y. {currentYear} - {nextYear}
         </h2>
-        {studentData.map((student, index) => (
+        {studentData.student?.map((student, index) => (
           <div className={styles.studentInfoContainer} key={index}>
             <h3>
               <span className={styles.studentInfoTitle}>Name: </span>
@@ -48,10 +59,30 @@ function StudentShedulePage() {
           </div>
         ))}
         <div className={styles.grid}>
-          <div className={styles.scheduleContainer}></div>
+          <div className={styles.scheduleContainer}>
+            {studentData.student &&
+            studentData.student[0].subjects?.length > 0 ? (
+              studentData.student[0].subjects?.map((subject, index) => (
+                <div className={styles.subjectContainer} key={index}>
+                  <div className={styles.subjectInfoContainer}>
+                    <h3>Subject: {subject?.subjectName}</h3>
+                    <h3>Code: {subject.subjectCode}</h3>
+                  </div>
+
+                  <span>Units: {subject.units}</span>
+                  <span>Schedule: {subject.date}</span>
+                  <span>Time: {subject.time}</span>
+                  <span>Instructor: {subject.instructor}</span>
+                  <hr />
+                </div>
+              ))
+            ) : (
+              <h3>No subjects added yet</h3>
+            )}
+          </div>
           <div className={styles.unitContainer}>
             <h4>Total Number of Units</h4>
-            <h4>0</h4>
+            <h4>{totalUnits}</h4>
             <h4>Maximum Number of Units</h4>
             <h4>30</h4>
           </div>
@@ -64,4 +95,4 @@ function StudentShedulePage() {
   );
 }
 
-export default StudentShedulePage;
+export default StudentSchedulePage;

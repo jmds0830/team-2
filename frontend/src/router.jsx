@@ -5,7 +5,7 @@ import StudentRegistrationPage from './pages/StudentRegistrationPage';
 import StudentInfoPage from './pages/StudentInfoPage';
 import PaymentBookingPage from './pages/PaymentBookingPage';
 import PaymentSchedulePage from './pages/PaymentSchedulePage';
-import StudentShedulePage from './pages/StudentSchedulePage';
+import StudentSchedulePage from './pages/StudentSchedulePage';
 import SubjectRegistrationPage from './pages/SubjectRegistrationPage';
 
 const router = createBrowserRouter([
@@ -51,7 +51,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/my-schedule/:id',
-    element: <StudentShedulePage />,
+    element: <StudentSchedulePage />,
   },
   {
     path: '*',

@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import Student from './models/StudentRegisterModel.js';
+import Subject from './models/SubjectModel.js';
 import validateStudentMiddleware from './middlewares/validateStudentMiddleware.js';
 import validateLoginMiddleware from './middlewares/validateLoginMiddleware.js';
 import jwt from 'jsonwebtoken';
@@ -188,11 +189,10 @@ app.patch('/student-info/:id', async (req, res) => {
 
 app.post('/login', validateLoginMiddleware, async (req, res) => {
   try {
-
     const { student } = req;
-    
+
     const token = generateToken(student._id);
-    
+
     student.token = token;
     await student.save();
 
@@ -210,22 +210,23 @@ app.post('/login', validateLoginMiddleware, async (req, res) => {
   }
 });
 
-
 app.get('/:username', async (req, res) => {
   try {
     const student = await Student.findOne({ username: req.params.username });
-    const payment = await PaymentBooking.findOne({ username: req.params.username });
+    const payment = await PaymentBooking.findOne({
+      username: req.params.username,
+    });
 
     if (student) {
       if (payment) {
-        res.status(200).json({ 
+        res.status(200).json({
           message: 'Payment Schedule booked for student',
-          token: student.token
+          token: student.token,
         });
       } else {
-        res.status(200).json({ 
+        res.status(200).json({
           message: 'Student found',
-          token: student.token
+          token: student.token,
         });
       }
     } else {
@@ -243,7 +244,7 @@ app.get('/payment-booking/:username', async (req, res) => {
     if (!student) {
       return res.status(404).json({
         message: 'Error! Student not found.',
-        });
+      });
     }
     res.status(200).json({
       student,
@@ -309,7 +310,6 @@ app.post('/admin/add-subject', async (req, res) => {
   }
 });
 
-
 app.post('/payment-booking/:username/book-schedule', async (req, res) => {
   try {
     const student = await Student.findOne({ username: req.params.username });
@@ -330,7 +330,9 @@ app.post('/payment-booking/:username/book-schedule', async (req, res) => {
 
     const existingDate = await PaymentBooking.findOne({ date });
     const existingTime = await PaymentBooking.findOne({ time });
-    const existingStudent = await PaymentBooking.findOne({ studentId: student.studentId });
+    const existingStudent = await PaymentBooking.findOne({
+      studentId: student.studentId,
+    });
 
     if (existingDate && existingTime) {
       res.status(400).json({
@@ -341,7 +343,8 @@ app.post('/payment-booking/:username/book-schedule', async (req, res) => {
 
     if (existingStudent) {
       res.status(400).json({
-        message: 'Student with same student id has already booked a payment schedule.',
+        message:
+          'Student with same student id has already booked a payment schedule.',
       });
       return;
     }
@@ -365,7 +368,6 @@ app.patch('/admin/update-subject/:subjId', async (req, res) => {
     const subject = await Subject.findOne({ subjectCode: req.params.subjId });
 
     if (!subject) {
-
       res.status(400).json({
         message: 'Error! Subject not found.',
         error: error.message,
@@ -396,10 +398,11 @@ app.patch('/admin/update-subject/:subjId', async (req, res) => {
   }
 });
 
-
 app.get('/payment-booking/:username/payment-schedule', async (req, res) => {
   try {
-    const paymentBooking = await PaymentBooking.find({ username: req.params.username });
+    const paymentBooking = await PaymentBooking.find({
+      username: req.params.username,
+    });
     if (!paymentBooking) {
       return res.status(404).json({
         message: 'Error! Payment schedule not found.',
@@ -427,19 +430,107 @@ app.delete('/admin/delete-subject/:subjId', async (req, res) => {
     });
   } catch (error) {
     res.status(400).json({
-      message: 'Error! Cannot delete subect.',
+      message: 'Error! Cannot delete subject.',
       error: error.message,
     });
   }
 });
 
-app.get('/subjects', async (req, res) => {
+app.get('/admin/all-subjects', async (req, res) => {
   try {
-    const subjects = await Subject.find();
-    res.send(subjects);
+    const result = await Subject.find();
+    res.send(result);
   } catch (error) {
     res.status(400).json({
-      message: 'Error! Cannot fetch subjects.',
+      message: 'Error fetching subjects',
+      error: error.message,
+    });
+  }
+});
+
+app.get('/subject-registration/:username', async (req, res) => {
+  try {
+    const student = await Student.findOne({ username: req.params.username });
+
+    if (!student) {
+      return res.status(404).json({
+        message: 'ERROR! Student not found.',
+      });
+    }
+    res.status(200).json({
+      student,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'Error fetching subjects',
+      error: error.message,
+    });
+  }
+});
+
+app.patch('/subject-registration/:username', async (req, res) => {
+  try {
+    const student = await Student.findOne({ username: req.params.username });
+
+    if (!student) {
+      return res.status(404).json({
+        message: 'ERROR! Student not found.',
+      });
+    }
+
+    const { subjectName, subjectCode, units, date, time, instructor, slots } =
+      req.body;
+
+    const newSubject = {
+      subjectName,
+      subjectCode,
+      units,
+      date,
+      time,
+      instructor,
+      slots,
+    };
+
+    student.subjects.push(newSubject);
+
+    await student.save();
+
+    return res.status(200).json({
+      message: 'Subjects added successfully.',
+      data: student,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: 'Error updating student subjects',
+      error: error.message,
+    });
+  }
+});
+
+app.delete('/subject-registration/:username', async (req, res) => {
+  try {
+    const student = await Student.findOne({ username: req.params.username });
+    const { subjectCode } = req.body;
+
+    if (!student) {
+      return res.status(404).json({
+        message: 'ERROR! Student not found.',
+      });
+    }
+
+    const subjectIndex = student.subjects.findIndex(
+      (subject) => subject.subjectCode === subjectCode
+    );
+
+    student.subjects.splice(subjectIndex, 1);
+    await student.save();
+    return res.status(200).json({
+      message: 'Subject removed successfully.',
+      data: student,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'Error! Cannot delete subject.',
       error: error.message,
     });
   }
