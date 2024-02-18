@@ -5,10 +5,11 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import Student from './models/StudentRegisterModel.js';
-import PaymentBooking from './models/PaymentBookingModel.js';
 import Subject from './models/SubjectModel.js';
 import validateStudentMiddleware from './middlewares/validateStudentMiddleware.js';
 import validateLoginMiddleware from './middlewares/validateLoginMiddleware.js';
+import jwt from 'jsonwebtoken';
+import PaymentBooking from './models/PaymentBookingModel.js';
 
 const PORT = process.env.PORT || 3000;
 
@@ -50,6 +51,13 @@ async function assignCollege(course) {
     college = 'Business';
   }
   return college;
+}
+
+function generateToken(studentId) {
+  const secretKey = '123';
+  const payload = { studentId };
+  const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+  return token;
 }
 
 app.post('/register', validateStudentMiddleware, async (req, res) => {
@@ -191,7 +199,7 @@ app.post('/login', validateLoginMiddleware, async (req, res) => {
     res.status(200).json({
       message: 'SUCCESS! User logged in',
       user: {
-        username,
+        username: student.username,
       },
     });
   } catch (error) {
