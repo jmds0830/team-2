@@ -6,6 +6,7 @@ import {
   Flex,
   TextInput,
   PasswordInput,
+  Tooltip,
 } from '@mantine/core';
 import { Modal } from 'antd';
 import styles from './styles/NullDashboard.module.css';
@@ -50,9 +51,9 @@ function NullDashboard() {
           password: formData.password,
         }),
       });
-      
+
       const result = await response.json();
-  
+
       if (response.ok) {
         const { username } = result.user;
         toast.success('Logged in successfully!');
@@ -60,7 +61,7 @@ function NullDashboard() {
         setFormData(initialFormData);
         setErrors({});
         navigate(`/${username}`);
-  
+
         setTimeout(() => {
           window.location.reload();
         }, 500);
@@ -109,7 +110,7 @@ function NullDashboard() {
 
   const isLoginDisabled = formData.username === '' || formData.password === '';
 
-  
+
 
   return (
     <Flex
@@ -192,11 +193,14 @@ function NullDashboard() {
       </div>
       <div className={styles.adminRegContainer}>
         <h3>School Admin?</h3>
-        <Button
-          size="lg"
-          variant="filled"
-          color="gray"
-        >Setup Account</Button>
+        <Tooltip label="Feature coming soon!">
+          <Button
+            data-disabled
+            size="lg"
+            variant="filled"
+            color="gray"
+          >Setup Account</Button>
+        </Tooltip>
       </div>
     </Flex>
   );
