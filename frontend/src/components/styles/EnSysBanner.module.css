@@ -1,7 +1,17 @@
 .toggleButton {
   position: absolute;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
   top: 20px;
   right: 20px;
+  z-index: 1100;
+}
+
+.userIcon {
+  width: 20px;
+  height: 20px;
 }
 
 .icon {

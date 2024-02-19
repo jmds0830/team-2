@@ -1,10 +1,15 @@
+.mainContainer {
+  font-size: 15px;
+}
+
 .grid {
   display: flex;
-  gap: 30px;
+  gap: 10px;
 }
 
 .title {
-  margin-bottom: 40px;
+  margin-top: 80px;
+  margin-bottom: -20px;
 }
 
 .studentInfoContainer {
@@ -18,17 +23,18 @@
 
 .scheduleContainer {
   overflow-x: hidden;
-  max-height: 250px;
+  height: 400px;
   width: 850px;
   border: solid 1px gray;
-  padding: 20px;
+  padding: 10px;
 }
 
 .subjectContainer {
   display: flex;
   flex-direction: column;
   text-align: left;
-  padding-inline: 50px;
+  padding: 10px;
+  border: solid 1px gray;
 }
 
 .subjectInfoContainer {
@@ -43,11 +49,10 @@
 }
 
 .button {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .name {
-  font-size: large;
   font-weight: bolder;
 }
 

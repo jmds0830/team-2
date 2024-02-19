@@ -3,6 +3,7 @@ import EnSysBanner from '../components/EnSysBanner';
 import styles from '../styles/StudentSchedulePage.module.css';
 import { Button } from '@mantine/core';
 import { useParams } from 'react-router-dom';
+import html2pdf from 'html2pdf.js';
 
 function StudentSchedulePage() {
   const [studentData, setStudentData] = useState({});
@@ -38,10 +39,40 @@ function StudentSchedulePage() {
     fetchData();
   }, [username, fetchData]);
 
+  function downloadPDF() {
+    setTimeout(() => {
+      const mainContainer = document.querySelector(`.${styles.mainContainer}`);
+      const scheduleContainer = document.querySelector(`.${styles.scheduleContainer}`);
+      const button = document.querySelector(`.${styles.button}`);
+
+      const totalHeight = scheduleContainer.scrollHeight;
+      button.style.display = 'none';
+      scheduleContainer.style.height = totalHeight + 'px';
+      mainContainer.style.marginTop = -80 + 'px';
+      mainContainer.style.color = 'black';
+
+      html2pdf()
+        .from(mainContainer)
+        .set({
+          margin: 0.3,
+          filename: 'student_schedule.pdf',
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+        })
+        .save()
+        .then(() => {
+          scheduleContainer.style.height = '';
+          mainContainer.style.marginTop = '';
+          mainContainer.style.color = '';
+          button.style.display = '';
+        });
+    }, 100);
+  }
+
   return (
     <>
       <EnSysBanner />
-      <div className={styles.mainContainer}>
+      <div id='contentToConvert' className={styles.mainContainer}>
         <h2 className={styles.title}>
           Schedule for 1st Semester A.Y. {currentYear} - {nextYear}
         </h2>
@@ -78,7 +109,6 @@ function StudentSchedulePage() {
                   <span>Schedule: {subject.date}</span>
                   <span>Time: {subject.time}</span>
                   <span>Instructor: {subject.instructor}</span>
-                  <hr />
                 </div>
               ))
             ) : (
@@ -92,7 +122,7 @@ function StudentSchedulePage() {
             <h4>30</h4>
           </div>
         </div>
-        <Button className={styles.button} variant="filled" color="gray">
+        <Button className={styles.button} variant="filled" color="gray" onClick={downloadPDF}>
           Download Schedule
         </Button>
       </div>
