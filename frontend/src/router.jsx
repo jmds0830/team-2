@@ -7,6 +7,7 @@ import PaymentBookingPage from './pages/PaymentBookingPage';
 import PaymentSchedulePage from './pages/PaymentSchedulePage';
 import StudentSchedulePage from './pages/StudentSchedulePage';
 import SubjectRegistrationPage from './pages/SubjectRegistrationPage';
+import NullSchedulePage from './pages/NullSchedulePage';
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
   {
     path: '/payment-booking/:username/payment-schedule',
     element: <PaymentSchedulePage />,
+  },
+  {
+    path: '/null-schedule/:username',
+    element: <NullSchedulePage />,
   },
   {
     path: '/my-schedule/:username',

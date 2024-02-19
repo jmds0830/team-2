@@ -8,6 +8,7 @@ import EnSysBanner from '../components/EnSysBanner';
 import StudentDashboard from '../components/StudentDashboard';
 import NullDashboard from '../components/NullDashboard';
 import { useParams } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 
 
 function HomePage() {
@@ -65,6 +66,7 @@ function HomePage() {
   return (
     <div>
       <EnSysBanner />
+      <Toaster position='top-center' />
       <div className={styles.mainContainer}>
         <div className={styles.leftContainer}>
           <div className={styles.announcementContainer}>

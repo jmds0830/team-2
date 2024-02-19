@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import {
   Button,
   Flex,
@@ -61,10 +61,6 @@ function NullDashboard() {
         setFormData(initialFormData);
         setErrors({});
         navigate(`/${username}`);
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
       } else {
         toast.error(result.message || 'An error occurred while logging in.');
       }
@@ -121,7 +117,6 @@ function NullDashboard() {
       direction="column"
       wrap="wrap"
     >
-      <Toaster position='top-center' />
       <div className={styles.loginContainer}>
         <Modal
           open={open}

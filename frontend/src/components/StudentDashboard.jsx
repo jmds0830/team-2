@@ -27,7 +27,6 @@ function StudentDashboard() {
   const handleNavToPaymentBooking = async () => {
     try {
       if (!username) return;
-
       const response = await fetch(`http://localhost:3000/${username}`, {
         method: 'GET',
         headers: {
@@ -48,8 +47,27 @@ function StudentDashboard() {
     }
   };
 
-  const handleNavToSchedule = () => {
-    navigate(`/my-schedule/${username}`);
+  const handleNavToSchedule = async() => {
+    try {
+      if (!username) return;
+      const response = await fetch(`http://localhost:3000/${username}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.subjects.length > 0) {
+          navigate(`/my-schedule/${username}`);
+        } else {
+          navigate(`/null-schedule/${username}`);
+        }
+      }
+    } catch (error) {
+      console.error('Error navigating to schedule:', error);
+    }
   };
 
   const handleNavToSubjRegistration = () => {

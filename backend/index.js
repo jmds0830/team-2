@@ -261,11 +261,13 @@ app.get('/:username', async (req, res) => {
         res.status(200).json({
           message: 'Payment Schedule booked for student',
           token: student.token,
+          subjects: student.subjects,
         });
       } else {
         res.status(200).json({
           message: 'Student found',
           token: student.token,
+          subjects: student.subjects,
         });
       }
     } else {

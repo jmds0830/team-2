@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Button,
   Flex,
@@ -6,10 +6,11 @@ import {
 import styles from './styles/NullPaymentBooking.module.css';
 
 function NullPaymentBooking() {
+  const { username } = useParams();
   const navigate = useNavigate();
 
   const handleNavToSubjReg = () => {
-    navigate('/subject-registration/:id'); // Placeholder route only. Leads to subject registration page
+    navigate(`/subject-registration/${username}`);
   }
 
   return (
