@@ -7,13 +7,13 @@ import { Toaster } from 'react-hot-toast';
 
 function PaymentBookingPage() {
   const [studentData, setStudentData] = useState([]);
-  const { id } = useParams();
+  const { username } = useParams();
 
   async function fetchStudentData() {
     try {
-      if (!id) return;
+      if (!username) return;
       const response = await fetch(
-        `http://localhost:3000/payment-booking/${id}`
+        `http://localhost:3000/payment-booking/${username}`
       );
       const data = await response.json();
       setStudentData(data.student);
@@ -24,14 +24,18 @@ function PaymentBookingPage() {
 
   useEffect(() => {
     fetchStudentData();
-  }, [id]);
+  }, [username]);
 
   return (
     <div>
       <Toaster position="top-center" />
       <EnSysBanner />
       <div>
-        <StudentPaymentBooking />
+        {studentData && studentData.length > 0 && studentData[0].subjects && studentData[0].subjects.length > 0 ? (
+          <StudentPaymentBooking />
+        ) : (
+          <NullPaymentBooking />
+        )}
       </div>
     </div>
   );
