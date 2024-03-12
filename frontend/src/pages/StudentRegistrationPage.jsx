@@ -282,7 +282,7 @@ function StudentRegistrationPage() {
               onChange={handleChange}
               onBlur={handleBlur}
             >
-              <option value="" selected disabled>
+              <option value="" disabled>
                 Select a course
               </option>
               <option value="BS Civil Engineering">BS Civil Engineering</option>
@@ -321,7 +321,7 @@ function StudentRegistrationPage() {
             <Input
               placeholder="Input username"
               name="username"
-              maxlength="15"
+              maxLength="15"
               value={formData.username}
               onChange={handleChange}
               onBlur={handleBlur}
