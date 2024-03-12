@@ -13,7 +13,9 @@ function StudentDashboard() {
     async function fetchStudentData() {
       try {
         if (!username) return;
-        const response = await fetch(`http://localhost:3000/${username}`);
+        const response = await fetch(
+          `https://team-2-6ug6.onrender.com/${username}`
+        );
         const data = await response.json();
         setStudentData(data.student);
       } catch (error) {
@@ -27,12 +29,15 @@ function StudentDashboard() {
   const handleNavToPaymentBooking = async () => {
     try {
       if (!username) return;
-      const response = await fetch(`http://localhost:3000/${username}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        `https://team-2-6ug6.onrender.com/${username}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -47,15 +52,18 @@ function StudentDashboard() {
     }
   };
 
-  const handleNavToSchedule = async() => {
+  const handleNavToSchedule = async () => {
     try {
       if (!username) return;
-      const response = await fetch(`http://localhost:3000/${username}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        `https://team-2-6ug6.onrender.com/${username}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -76,7 +84,7 @@ function StudentDashboard() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/logout', {
+      const response = await fetch('https://team-2-6ug6.onrender.com/logout', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,

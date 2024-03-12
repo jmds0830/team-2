@@ -13,7 +13,7 @@ function PaymentBookingPage() {
     try {
       if (!username) return;
       const response = await fetch(
-        `http://localhost:3000/payment-booking/${username}`
+        `https://team-2-6ug6.onrender.com/payment-booking/${username}`
       );
       const data = await response.json();
       setStudentData(data.student);
@@ -31,7 +31,10 @@ function PaymentBookingPage() {
       <Toaster position="top-center" />
       <EnSysBanner />
       <div>
-        {studentData && studentData.length > 0 && studentData[0].subjects && studentData[0].subjects.length > 0 ? (
+        {studentData &&
+        studentData.length > 0 &&
+        studentData[0].subjects &&
+        studentData[0].subjects.length > 0 ? (
           <StudentPaymentBooking />
         ) : (
           <NullPaymentBooking />

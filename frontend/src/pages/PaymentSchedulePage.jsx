@@ -13,7 +13,7 @@ function PaymentSchedulePage() {
     try {
       if (!username) return;
       const response = await fetch(
-        `http://localhost:3000/payment-booking/${username}/payment-schedule`
+        `https://team-2-6ug6.onrender.com/payment-booking/${username}/payment-schedule`
       );
       const data = await response.json();
       setPaymentBookingData(data.paymentBooking);

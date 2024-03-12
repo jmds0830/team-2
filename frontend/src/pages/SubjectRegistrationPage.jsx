@@ -17,7 +17,9 @@ function SubjectRegistrationPage() {
 
   async function fetchSubjectData() {
     try {
-      const response = await fetch('http://localhost:3000/admin/all-subjects');
+      const response = await fetch(
+        'https://team-2-6ug6.onrender.com/admin/all-subjects'
+      );
       const data = await response.json();
       setSubjectData(data);
     } catch (error) {
@@ -43,7 +45,7 @@ function SubjectRegistrationPage() {
     try {
       if (!username) return;
       const response = await fetch(
-        `http://localhost:3000/subject-registration/${username}`
+        `https://team-2-6ug6.onrender.com/subject-registration/${username}`
       );
       const data = await response.json();
       setStudentData(data);
@@ -65,7 +67,7 @@ function SubjectRegistrationPage() {
   const handleAdd = async (subject) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/subject-registration/${username}`,
+        `https://team-2-6ug6.onrender.com/subject-registration/${username}`,
         {
           method: 'PATCH',
           headers: {
@@ -92,7 +94,7 @@ function SubjectRegistrationPage() {
   const handleRemove = async (subject) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/subject-registration/${username}`,
+        `https://team-2-6ug6.onrender.com/subject-registration/${username}`,
         {
           method: 'DELETE',
           headers: {

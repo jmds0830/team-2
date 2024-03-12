@@ -1,13 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import {
-  Button,
-  Flex,
-  TextInput,
-  PasswordInput,
-  Tooltip,
-} from '@mantine/core';
+import { Button, Flex, TextInput, PasswordInput, Tooltip } from '@mantine/core';
 import { Modal } from 'antd';
 import styles from './styles/NullDashboard.module.css';
 
@@ -25,7 +19,7 @@ function NullDashboard() {
 
   const handleNavToStudReg = () => {
     navigate('/register');
-  }
+  };
 
   const openModal = () => {
     setOpen(true);
@@ -41,7 +35,7 @@ function NullDashboard() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:3000/login', {
+      const response = await fetch('https://team-2-6ug6.onrender.com/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +72,7 @@ function NullDashboard() {
   const handleBlur = async (name, value) => {
     if (value.trim() === '') {
       try {
-        const response = await fetch('http://localhost:3000/login', {
+        const response = await fetch('https://team-2-6ug6.onrender.com/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -105,8 +99,6 @@ function NullDashboard() {
   };
 
   const isLoginDisabled = formData.username === '' || formData.password === '';
-
-
 
   return (
     <Flex
@@ -144,7 +136,9 @@ function NullDashboard() {
               value={formData.username}
               name="username"
               placeholder="username"
-              onChange={(event) => handleChange(event.target.name, event.target.value)}
+              onChange={(event) =>
+                handleChange(event.target.name, event.target.value)
+              }
               onBlur={() => handleBlur('username', formData.username)}
               error={errors.username}
               size="md"
@@ -154,7 +148,9 @@ function NullDashboard() {
               value={formData.password}
               name="password"
               placeholder="password"
-              onChange={(event) => handleChange(event.target.name, event.target.value)}
+              onChange={(event) =>
+                handleChange(event.target.name, event.target.value)
+              }
               onBlur={() => handleBlur('password', formData.password)}
               error={errors.password}
               size="md"
@@ -165,16 +161,13 @@ function NullDashboard() {
               color="gray"
               disabled={isLoginDisabled}
               onClick={handleLogin}
-            >Log In
+            >
+              Log In
             </Button>
           </Flex>
         </Modal>
-        <Button
-          size="lg"
-          variant="filled"
-          color="gray"
-          onClick={openModal}
-        >Log In
+        <Button size="lg" variant="filled" color="gray" onClick={openModal}>
+          Log In
         </Button>
       </div>
       <div className={styles.studentRegContainer}>
@@ -184,17 +177,16 @@ function NullDashboard() {
           variant="filled"
           color="gray"
           onClick={() => handleNavToStudReg()}
-        >Create Account</Button>
+        >
+          Create Account
+        </Button>
       </div>
       <div className={styles.adminRegContainer}>
         <h3>School Admin?</h3>
         <Tooltip label="Feature coming soon!">
-          <Button
-            data-disabled
-            size="lg"
-            variant="filled"
-            color="gray"
-          >Setup Account</Button>
+          <Button data-disabled size="lg" variant="filled" color="gray">
+            Setup Account
+          </Button>
         </Tooltip>
       </div>
     </Flex>

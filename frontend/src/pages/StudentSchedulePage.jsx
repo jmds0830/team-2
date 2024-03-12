@@ -16,7 +16,7 @@ function StudentSchedulePage() {
     try {
       if (!username) return;
       const response = await fetch(
-        `http://localhost:3000/subject-registration/${username}`
+        `https://team-2-6ug6.onrender.com/subject-registration/${username}`
       );
       const data = await response.json();
       setStudentData(data);
@@ -42,7 +42,9 @@ function StudentSchedulePage() {
   function downloadPDF() {
     setTimeout(() => {
       const mainContainer = document.querySelector(`.${styles.mainContainer}`);
-      const scheduleContainer = document.querySelector(`.${styles.scheduleContainer}`);
+      const scheduleContainer = document.querySelector(
+        `.${styles.scheduleContainer}`
+      );
       const button = document.querySelector(`.${styles.button}`);
 
       const totalHeight = scheduleContainer.scrollHeight;
@@ -72,7 +74,7 @@ function StudentSchedulePage() {
   return (
     <>
       <EnSysBanner />
-      <div id='contentToConvert' className={styles.mainContainer}>
+      <div id="contentToConvert" className={styles.mainContainer}>
         <h2 className={styles.title}>
           Schedule for 1st Semester A.Y. {currentYear} - {nextYear}
         </h2>
@@ -122,7 +124,12 @@ function StudentSchedulePage() {
             <h4>30</h4>
           </div>
         </div>
-        <Button className={styles.button} variant="filled" color="gray" onClick={downloadPDF}>
+        <Button
+          className={styles.button}
+          variant="filled"
+          color="gray"
+          onClick={downloadPDF}
+        >
           Download Schedule
         </Button>
       </div>

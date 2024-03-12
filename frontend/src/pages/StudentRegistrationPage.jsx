@@ -33,27 +33,30 @@ function StudentRegistrationPage() {
         return;
       }
 
-      const response = await fetch('http://localhost:3000/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          course: formData.course,
-          email: formData.email,
-          username: formData.username,
-          accept: formData.accept,
-          photo: formData.photo,
-        }),
-      });
+      const response = await fetch(
+        'https://team-2-6ug6.onrender.com/register',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            course: formData.course,
+            email: formData.email,
+            username: formData.username,
+            accept: formData.accept,
+            photo: formData.photo,
+          }),
+        }
+      );
 
       const result = await response.json();
 
       if (result.message === 'Error! Username already exists.') {
         await toast.promise(
-          fetch('http://localhost:3000/register', {
+          fetch('https://team-2-6ug6.onrender.com/register', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -76,7 +79,7 @@ function StudentRegistrationPage() {
 
       if (result.message === 'Error! Email already exists.') {
         await toast.promise(
-          fetch('http://localhost:3000/register', {
+          fetch('https://team-2-6ug6.onrender.com/register', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -161,15 +164,18 @@ function StudentRegistrationPage() {
 
     if (value.trim() === '') {
       try {
-        const response = await fetch('http://localhost:3000/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            [name]: value,
-          }),
-        });
+        const response = await fetch(
+          'https://team-2-6ug6.onrender.com/register',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              [name]: value,
+            }),
+          }
+        );
 
         const result = await response.json();
 

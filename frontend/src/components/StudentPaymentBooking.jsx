@@ -18,7 +18,7 @@ function StudentPaymentBooking() {
     try {
       if (!username) return;
       const response = await fetch(
-        `http://localhost:3000/payment-booking/${username}`
+        `https://team-2-6ug6.onrender.com/payment-booking/${username}`
       );
       const data = await response.json();
       setStudentData(data.student);
@@ -42,7 +42,7 @@ function StudentPaymentBooking() {
       });
 
       const response = await fetch(
-        `http://localhost:3000/payment-booking/${username}/book-schedule`,
+        `https://team-2-6ug6.onrender.com/payment-booking/${username}/book-schedule`,
         {
           method: 'POST',
           headers: {

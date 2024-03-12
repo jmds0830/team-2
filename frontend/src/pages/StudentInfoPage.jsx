@@ -37,7 +37,7 @@ function StudentInfoPage() {
       }
 
       const response = await fetch(
-        `http://localhost:3000/student-info/${username}`,
+        `https://team-2-6ug6.onrender.com/student-info/${username}`,
         {
           method: 'PATCH',
           headers: {
@@ -86,7 +86,7 @@ function StudentInfoPage() {
     try {
       if (!username) return;
       const response = await fetch(
-        `http://localhost:3000/student-info/${username}`
+        `https://team-2-6ug6.onrender.com/student-info/${username}`
       );
       const data = await response.json();
       setStudentData(data.student);
@@ -114,7 +114,7 @@ function StudentInfoPage() {
       }
 
       const response = await fetch(
-        `http://localhost:3000/student-info/${username}`,
+        `https://team-2-6ug6.onrender.com/student-info/${username}`,
         {
           method: 'PATCH',
           headers: {
