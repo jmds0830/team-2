@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Input, Checkbox, Button, FileInput } from '@mantine/core';
 import { IconChevronDown, IconExclamationCircle } from '@tabler/icons-react';
-import styles from '../styles/StudentRegistrationPage.module.css';
+import styles from '../styles/StudentRegistration.module.css';
 import EnSysBanner from '../components/EnSysBanner';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
