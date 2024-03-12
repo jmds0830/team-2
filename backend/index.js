@@ -11,10 +11,13 @@ import validateStudentMiddleware from './middlewares/validateStudentMiddleware.j
 import validateLoginMiddleware from './middlewares/validateLoginMiddleware.js';
 import jwt from 'jsonwebtoken';
 import PaymentBooking from './models/PaymentBookingModel.js';
+import 'dotenv/config';
 
 const PORT = process.env.PORT || 3000;
 
-await mongoose.connect('mongodb://127.0.0.1:27017/ensys');
+await mongoose.connect(process.env.DB_URL, {
+  dbName: process.env.DB_NAME,
+});
 
 app.set('port', PORT);
 app.use(bodyParser.json());
@@ -63,8 +66,7 @@ function generateToken(studentId) {
 
 function generateQueueId() {
   const length = 10;
-  const charset =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let queueId = '';
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * charset.length);
